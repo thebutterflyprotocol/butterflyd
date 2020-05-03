@@ -12,6 +12,6 @@ public class ButterflyClient : Thread
 
     public void worker()
     {
-
+        /* TODO: Add receive here, work out, then send and exit */
     }
 }
