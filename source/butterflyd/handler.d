@@ -1,6 +1,6 @@
 module butterflyd.handler;
 
-import std.socket;
+import std.socket : Socket, AddressFamily, SocketType, UnixAddress, SocketOSException, AddressException;
 import butterflyd.exceptions : ButterflyException;
 
 public final class ButterflyHandler
@@ -22,15 +22,15 @@ public final class ButterflyHandler
         {
             handlerSocket = new Socket(AddressFamily.UNIX, SocketType.STREAM);
             handlerSocket.bind(new UnixAddress(unixSocketPath));
-            handlerSocket.listen();
-        }
-        catch(SocketOSException)
-        {
-            throw new ButterflyException("Error in setting up handler socket");
+            handlerSocket.listen(1); /* todo: vALUE HERE */
         }
         catch(AddressException)
         {
             throw new ButterflyException("Address format incorrect");
+        }
+        catch(SocketOSException)
+        {
+            throw new ButterflyException("Error in setting up handler socket");
         }
     }
 }
