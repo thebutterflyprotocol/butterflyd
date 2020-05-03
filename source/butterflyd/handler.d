@@ -2,6 +2,7 @@ module butterflyd.handler;
 
 import std.socket : Socket, AddressFamily, SocketType, UnixAddress, SocketOSException, AddressException;
 import butterflyd.exceptions : ButterflyException;
+import butterflyd.client : ButterflyClient;
 
 public final class ButterflyHandler
 {
@@ -22,7 +23,7 @@ public final class ButterflyHandler
         {
             handlerSocket = new Socket(AddressFamily.UNIX, SocketType.STREAM);
             handlerSocket.bind(new UnixAddress(unixSocketPath));
-            handlerSocket.listen(1); /* todo: vALUE HERE */
+            handlerSocket.listen(1); /* TODO: Value here */
         }
         catch(AddressException)
         {
@@ -31,6 +32,22 @@ public final class ButterflyHandler
         catch(SocketOSException)
         {
             throw new ButterflyException("Error in setting up handler socket");
+        }
+    }
+
+    public void dispatcher()
+    {
+        bool isActive = true;
+        while(isActive)
+        {
+            /* Accept a connection from the backlog */
+            Socket connection = handlerSocket.accept();
+
+            /* Spawn a new butterfly client */
+            ButterflyClient client = new ButterflyClient(connection);
+
+            /* Start the thread */
+            client.start();
         }
     }
 }
