@@ -8,5 +8,6 @@
 	},
 	"description": "Butterfly mail daemon",
 	"license": "GPL Affero v3",
-	"name": "butterflyd"
+	"name": "butterflyd",
+	"targetType": "executable"
 }
