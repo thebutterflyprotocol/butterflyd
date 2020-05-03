@@ -35,6 +35,13 @@ public final class ButterflyHandler
         }
     }
 
+    /**
+    * Loops forever accepting new connections
+    * from the connection queue by dequeuing
+    * them, spawning a new `ButterflyClient`
+    * object and then starting its respective
+    * worker thread.
+    */
     public void dispatcher()
     {
         bool isActive = true;
