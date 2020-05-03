@@ -1,0 +1,12 @@
+{
+	"authors": [
+		"Tristan B. Kildaire"
+	],
+	"copyright": "Copyright © 2020, Tristan B. Kildaire",
+	"dependencies": {
+		"libester": "~>1.0.6"
+	},
+	"description": "Butterfly mail daemon",
+	"license": "GPL Affero v3",
+	"name": "butterflyd"
+}
