@@ -18,5 +18,6 @@ public final class ButterflyHandler
         /* TODO: Add bind here */
         handlerSocket = new Socket(AddressFamily.UNIX, SocketType.STREAM);
         handlerSocket.bind(new UnixAddress(unixSocketPath));
+        handlerSocket.listen();
     }
 }
