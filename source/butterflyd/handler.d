@@ -1,6 +1,7 @@
 module butterflyd.handler;
 
 import std.socket;
+import butterflyd.exceptions : ButterflyException;
 
 public final class ButterflyHandler
 {
@@ -9,15 +10,27 @@ public final class ButterflyHandler
 
     /**
     * Constructs a new Butterfly message handler
-    * bound to the given UNIX domain socket path
-    * and starts listening.
+    * bound to the given UNIX domain socket path,
+    * `unixSocketPath` and starts listening.
     *
+    * Throws a `ButterflyException` on any error
+    * regarding address format, binding or listening.
     */
     this(string unixSocketPath)
     {
-        /* TODO: Add bind here */
-        handlerSocket = new Socket(AddressFamily.UNIX, SocketType.STREAM);
-        handlerSocket.bind(new UnixAddress(unixSocketPath));
-        handlerSocket.listen();
+        try
+        {
+            handlerSocket = new Socket(AddressFamily.UNIX, SocketType.STREAM);
+            handlerSocket.bind(new UnixAddress(unixSocketPath));
+            handlerSocket.listen();
+        }
+        catch(SocketOSException)
+        {
+            throw new ButterflyException("Error in setting up handler socket");
+        }
+        catch(AddressException)
+        {
+            throw new ButterflyException("Address format incorrect");
+        }
     }
 }
