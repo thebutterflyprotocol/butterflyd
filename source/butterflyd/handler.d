@@ -4,6 +4,17 @@ import std.socket : Socket, AddressFamily, SocketType, UnixAddress, SocketOSExce
 import butterflyd.exceptions : ButterflyException;
 import butterflyd.client : ButterflyClient;
 
+/**
+* Represents the message handler for the
+* Bester server it is attached to (via
+* a UNIX domain socket).
+*
+* This dispatches new connections from the
+* server to that socket to client handlers
+* that handle each connection from the Bester
+* server wishing to get a handler response.
+*
+*/
 public final class ButterflyHandler
 {
     /* Bester handler socket */
