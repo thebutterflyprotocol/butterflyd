@@ -4,7 +4,9 @@
 	],
 	"copyright": "Copyright © 2020, Tristan B. Kildaire",
 	"dependencies": {
-		"libester": "~>1.0.6"
+		"bformat": "~>1.0.4",
+		"libester": "~>1.0.6",
+		"vibe-d": "~>0.8.6"
 	},
 	"description": "Butterfly mail daemon",
 	"license": "GPL Affero v3",

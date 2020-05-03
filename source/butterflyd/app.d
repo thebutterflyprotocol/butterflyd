@@ -16,5 +16,4 @@ void main(string[] args)
 	{
 		writeln("Missing server configuraiton argument");
 	}
-	
 }
