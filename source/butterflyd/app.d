@@ -3,9 +3,18 @@ module butterflyd.app;
 import std.stdio;
 import butterflyd.handler : ButterflyHandler;
 
-void main()
+void main(string[] args)
 {
-	/* Firstly construct a handler */
-	string tempSocketPath = "~/sock";
-	ButterflyHandler handler = new ButterflyHandler(tempSocketPath);
+	/* Make sure we have atleast 2 arguments */
+	if(args.length >= 2)
+	{
+		/* Firstly construct a handler */
+		string tempSocketPath = "~/sock";
+		ButterflyHandler handler = new ButterflyHandler(tempSocketPath);
+	}
+	else
+	{
+		writeln("Missing server configuraiton argument");
+	}
+	
 }
