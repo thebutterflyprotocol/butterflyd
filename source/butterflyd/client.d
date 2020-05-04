@@ -3,11 +3,12 @@ module butterflyd.client;
 import core.thread : Thread;
 import std.socket : Socket;
 import bmessage;
-import std.json : JSONValue;
+import std.json : JSONValue, JSONException;
 import std.stdio;
 import std.string;
 import butterflyd.management.manager;
 import butterflyd.data.message;
+import std.conv;
 
 public class ButterflyClient : Thread
 {
@@ -39,41 +40,90 @@ public class ButterflyClient : Thread
 
         writeln(serverMessage);
 
-        /* Make sure we store the `bfid` */
-        string bfid = serverMessage["bfid"].str();
+        
 
         /* We need a command */
         string commandField = serverMessage["command"].str();
         writeln("Command is: " ~ commandField);
 
-        /**
-        * If the user wants to register.
-        * This "requires" no bfid as it is one-shot.
-        */
-        if(cmp(commandField, "register") == 0)
+
+        /* Make sure we store the `bfid` */
+        string bfid = serverMessage["bfid"].str();
+
+        try
         {
-            /* Get the registration details */
-            JSONValue accountDetails = serverMessage["account"];
-            writeln("Account data: " ~ accountDetails.toPrettyString());
+            /**
+            * If the user wants to register.
+            * This "requires" no bfid as it is one-shot.
+            */
+            if(cmp(commandField, "register") == 0)
+            {
+                /* Get the registration details */
+                JSONValue accountDetails = serverMessage["account"];
+                writeln("Account data: " ~ accountDetails.toPrettyString());
 
-            /* Get the username and password */
-            string username = accountDetails["username"].str(), password = accountDetails["password"].str();
+                /* Get the username and password */
+                string username = accountDetails["username"].str(), password = accountDetails["password"].str();
 
-            bool registrationSucess = Manager.registerAccount(username, password);
+                bool registrationSucess = Manager.registerAccount(username, password);
 
+            }
+            else if(cmp(commandField, "sendMail") == 0)
+            {
+                /* TODO: First autheticate, using serverMessage["auth"] */
+
+                /* Get the mail message details */
+                JSONValue mailDetails = serverMessage["message"];
+
+                /* Create a message */
+                MailMessage message = new MailMessage(mailDetails);
+
+                /* TODO: Send mail */
+                bool mailStatus = Manager.sendMail(message);
+                writeln("Mail status: " ~ to!(string)(mailStatus));
+
+                if(mailStatus)
+                {
+                    sendMessage(handle, JSONValue("Yah"));
+                    writeln("dfhdfhjfsdk");
+                }
+            }
         }
-        else if(cmp(commandField, "sendMail") == 0)
+        catch(JSONException e)
         {
-            /* TODO: First autheticate, using serverMessage["auth"] */
+            /* Construct the full message */
+            JSONValue responseMessage;
 
-            /* Get the mail message details */
-            JSONValue mailDetails = serverMessage["message"];
+            /* Construct the `command` block */
+            JSONValue commandBlock;
+            commandBlock["type"] = "sendClients";
+            commandBlock["data"] = [serverMessage["account"]["username"].str()];
 
-            /* Create a message */
-            MailMessage message = new MailMessage(mailDetails);
+            /* Construct the header */
+            JSONValue headerBlock;
+            headerBlock["command"] = commandBlock;
+            headerBlock["status"] = "0";
 
-            /* TODO: Send mail */
-            bool mailStatus = Manager.sendMail(message);
+            /* Attach the `header` block to the response message */
+            responseMessage["header"] = headerBlock;
+
+            /* Generate butterfly response */
+            JSONValue butterflyResponse;
+            butterflyResponse["bfid"] = bfid;
+
+            JSONValue status;
+            status["code"] = "1";
+            status["message"] = e.toString();
+            butterflyResponse["status"] = status;
+
+
+            /* Set the data */
+            responseMessage["data"] = butterflyResponse;
+            
+            /* Send the response message */
+            sendMessage(handle, responseMessage);
         }
+
+        
     }
 }

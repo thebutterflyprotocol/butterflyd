@@ -7,7 +7,7 @@
 		"diet-ng": "1.7.2",
 		"eventcore": "0.8.50",
 		"libasync": "0.8.6",
-		"libester": "1.0.6",
+		"libester": "1.0.7",
 		"libevent": "2.0.2+2.0.16",
 		"memutils": "1.0.4",
 		"mir-linux-kernel": "1.0.1",
