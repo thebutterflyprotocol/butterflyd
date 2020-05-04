@@ -7,6 +7,7 @@ import std.json : JSONValue;
 import std.stdio;
 import std.string;
 import butterflyd.management.manager;
+import butterflyd.data.message;
 
 public class ButterflyClient : Thread
 {
@@ -60,6 +61,19 @@ public class ButterflyClient : Thread
 
             bool registrationSucess = Manager.registerAccount(username, password);
 
+        }
+        else if(cmp(commandField, "sendMail") == 0)
+        {
+            /* TODO: First autheticate, using serverMessage["auth"] */
+
+            /* Get the mail message details */
+            JSONValue mailDetails = serverMessage["message"];
+
+            /* Create a message */
+            MailMessage message = new MailMessage(mailDetails);
+
+            /* TODO: Send mail */
+            bool mailStatus = Manager.sendMail(message);
         }
     }
 }
