@@ -1,7 +1,7 @@
 module butterflyd.app;
 
 import std.stdio;
-import butterflyd.handler : ButterflyHandler;
+import butterflyd.handler.handler : ButterflyHandler;
 
 void main(string[] args)
 {
@@ -9,8 +9,9 @@ void main(string[] args)
 	if(args.length >= 2)
 	{
 		/* Firstly construct a handler */
-		string tempSocketPath = "~/sock";
+		string tempSocketPath = "/home/deavmi/Documents/Projects/bester/besterd/aSock";
 		ButterflyHandler handler = new ButterflyHandler(tempSocketPath);
+		handler.dispatch();
 	}
 	else
 	{

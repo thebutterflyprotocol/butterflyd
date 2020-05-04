@@ -5,6 +5,8 @@ import std.socket : Socket;
 import bmessage;
 import std.json : JSONValue;
 import std.stdio;
+import std.string;
+import butterflyd.management.manager;
 
 public class ButterflyClient : Thread
 {
@@ -35,5 +37,29 @@ public class ButterflyClient : Thread
         receiveMessage(handle, serverMessage);
 
         writeln(serverMessage);
+
+        /* Make sure we store the `bfid` */
+        string bfid = serverMessage["bfid"].str();
+
+        /* We need a command */
+        string commandField = serverMessage["command"].str();
+        writeln("Command is: " ~ commandField);
+
+        /**
+        * If the user wants to register.
+        * This "requires" no bfid as it is one-shot.
+        */
+        if(cmp(commandField, "register") == 0)
+        {
+            /* Get the registration details */
+            JSONValue accountDetails = serverMessage["account"];
+            writeln("Account data: " ~ accountDetails.toPrettyString());
+
+            /* Get the username and password */
+            string username = accountDetails["username"].str(), password = accountDetails["password"].str();
+
+            bool registrationSucess = Manager.registerAccount(username, password);
+
+        }
     }
 }
