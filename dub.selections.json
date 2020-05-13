@@ -13,8 +13,8 @@
 		"mir-linux-kernel": "1.0.1",
 		"openssl": "1.1.6+1.0.1g",
 		"stdx-allocator": "2.77.5",
-		"taggedalgebraic": "0.11.13",
+		"taggedalgebraic": "0.11.15",
 		"vibe-core": "1.9.1",
-		"vibe-d": "0.8.6"
+		"vibe-d": "0.9.0-alpha.4"
 	}
 }
