@@ -3,7 +3,7 @@ module server.server;
 import core.thread : Thread;
 import std.socket : Socket;
 
-public final class ButterflyServer : Thread
+public final class ButterflyServer
 {
 
     /**
@@ -18,10 +18,10 @@ public final class ButterflyServer : Thread
 
     this()
     {
-        super(&run);
+        
     }
 
-    private void run()
+    public void run()
     {
         /* TODO: Loop here */
         while(active)
