@@ -4,7 +4,7 @@
 	],
 	"copyright": "Copyright © 2020, Tristan B. Kildaire",
 	"dependencies": {
-		"bformat": "~>1.0.6"
+		"bformat": "~>1.0.7"
 	},
 	"description": "A minimal D application.",
 	"license": "AGPL v3",
