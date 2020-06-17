@@ -5,6 +5,7 @@ import std.socket : Socket;
 import bmessage;
 import std.stdio;
 import std.json;
+import std.string;
 
 public final class ButterflyClient : Thread
 {
@@ -51,6 +52,50 @@ public final class ButterflyClient : Thread
                 string command = commandBlock["command"].str();
 
                 /* TODO: Add command handling here */
+                if(cmp(command, "auth") == 0)
+                {
+
+                }
+                else if(cmp(command, "sendMail") == 0)
+                {
+
+                }
+                else if(cmp(command, "storeMail") == 0)
+                {
+
+                }
+                else if(cmp(command, "deliverMail") == 0)
+                {
+
+                }
+                else if(cmp(command, "fetchMail") == 0)
+                {
+
+                }
+                else if(cmp(command, "createFolder") == 0)
+                {
+
+                }
+                else if(cmp(command, "deleteFolder") == 0)
+                {
+
+                }
+                else if(cmp(command, "addToFolder") == 0)
+                {
+
+                }
+                else if(cmp(command, "removeFromFolder") == 0)
+                {
+
+                }
+                else if(cmp(command, "listFolder") == 0)
+                {
+
+                }
+                else
+                {
+                    /* TODO: Add error handling for invalid commands */
+                }
             }
             else
             {
