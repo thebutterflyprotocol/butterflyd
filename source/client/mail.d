@@ -22,6 +22,20 @@ public final class Mailbox
         return folders;
     }
 
+    public Mail getMail()
+    {
+        Mail mail;
+
+        /* TODO: Implement me */
+
+        return mail;
+    }
+
+    public void deleteMail()
+    {
+
+    }
+
 }
 
 /**
@@ -97,19 +111,32 @@ public final class Folder
 public final class Mail
 {
 
+    private JSONValue mailBlock;
+
     /* TODO (think about): Before id of mail (for creating) and also for existing */
     private string[] recipients;
 
-    public static Mail createMail(JSONValue mailBlock)
+    this(JSONValue mailBlock)
     {
-        Mail createdMail;
+        /* TODO: */
+        this.mailBlock = mailBlock;
 
-
-        return createdMail;
+        /* Populate the array of recipients */
+        JSONValue[] recipientArray = mailBlock["recipients"].array();
+        foreach(JSONValue recipient; recipientArray)
+        {
+            recipients ~= recipient.str();
+        }
     }
 
-    public void deleteMail()
+    public string[] getRecipients()
     {
-        /* TODO: Implement me */
+        return recipients;
+    }
+
+
+    public JSONValue getMessaageJSON()
+    {
+        return mailBlock;
     }
 }
