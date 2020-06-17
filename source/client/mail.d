@@ -111,7 +111,7 @@ public final class Folder
 public final class Mail
 {
 
-    private JSONValue mailBlock;
+    private JSONValue messageBlock;
 
     /* TODO (think about): Before id of mail (for creating) and also for existing */
     private string[] recipients;
@@ -119,7 +119,7 @@ public final class Mail
     this(JSONValue mailBlock)
     {
         /* TODO: */
-        this.mailBlock = mailBlock;
+        this.messageBlock = mailBlock["message"];
 
         /* Populate the array of recipients */
         JSONValue[] recipientArray = mailBlock["recipients"].array();
@@ -135,8 +135,8 @@ public final class Mail
     }
 
 
-    public JSONValue getMessaageJSON()
+    public JSONValue getMessage()
     {
-        return mailBlock;
+        return messageBlock;
     }
 }
