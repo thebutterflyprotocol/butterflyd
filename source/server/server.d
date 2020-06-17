@@ -18,7 +18,7 @@ public final class ButterflyServer
     /**
     * Whether or not the server is active
     */
-    private bool active;
+    private bool active = true;
 
     this(Address bindAddress)
     {

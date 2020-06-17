@@ -3,6 +3,8 @@ module client.client;
 import core.thread : Thread;
 import std.socket : Socket;
 
+import bmessage;
+
 public final class ButterflyClient : Thread
 {
     /**
@@ -13,7 +15,7 @@ public final class ButterflyClient : Thread
     /**
     * Whether or not the server is active
     */
-    private bool active;
+    private bool active = true;
 
     this(Socket clientSocket)
     {
