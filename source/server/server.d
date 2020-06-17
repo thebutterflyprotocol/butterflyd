@@ -1,10 +1,14 @@
 module server.server;
 
-import std.socket : Socket;
+import std.socket : Socket, Address, SocketType, ProtocolType;
 import client.client : ButterflyClient;
 
 public final class ButterflyServer
 {
+    /**
+    * TODO: Later implement listeners so that we can
+    * bind to multiple sockets.
+    */
 
     /**
     * Socket to listen for incoming connections on
@@ -16,13 +20,27 @@ public final class ButterflyServer
     */
     private bool active;
 
-    this()
+    this(Address bindAddress)
     {
-        
+        /**
+        * Instantiate a new Socket for the given Address
+        * `bindAddress` of which it will bind to.
+        */
+        serverSocket = new Socket(bindAddress.addressFamily, SocketType.STREAM, ProtocolType.TCP);
+
+        /* Start accepting connections */
+        run();
+
+        /* Close the socket */
+        serverSocket.close();
     }
 
-    public void run()
+    private void run()
     {
+        /* TODO: backlog */
+        /* Start accepting incoming connections */
+        serverSocket.listen(1);
+
         /* TODO: Loop here */
         while(active)
         {
@@ -40,6 +58,5 @@ public final class ButterflyServer
 
             /* TODO: Add to array */
         }
-
     }
 }
