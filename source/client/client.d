@@ -26,5 +26,12 @@ public final class ButterflyClient : Thread
     private void run()
     {
         /* TODO: Implement loop read-write here */
+        while(active)
+        {
+
+        }
+
+        /* Close the socket */
+        clientSocket.close();
     }
 }
