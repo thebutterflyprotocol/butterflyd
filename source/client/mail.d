@@ -13,7 +13,18 @@ import std.json;
 public final class Mailbox
 {
 
-    private Folder[] getFolders()
+    public static Mailbox createMailbox(string username)
+    {
+        /* TODO: Implement me */
+        return new Mailbox("");
+    }
+
+    this(string username)
+    {
+        /* TODO: Implement fetching of mailbox-by-username here */
+    }
+
+    public Folder[] getFolders()
     {
         Folder[] folders;
 
@@ -22,13 +33,14 @@ public final class Mailbox
         return folders;
     }
 
-    public Mail getMail()
+    public Folder addBaseFolder(string folderName)
     {
-        Mail mail;
+        return null;
+    }
 
-        /* TODO: Implement me */
+    public void storeMessage(Folder folder, Mail message)
+    {
 
-        return mail;
     }
 
     public void deleteMail()
@@ -56,14 +68,17 @@ public final class Folder
     private string folderName;
 
     /**
-    * The folders within this folder
+    * The associated Mailbox
     */
+    private Mailbox mailbox;
 
-
-    this(Folder parentFolder, string folderName)
+    this(Mailbox mailbox, Folder parentFolder, string folderName)
     {
         this.parentFolder = parentFolder;
         this.folderName = folderName;
+        this.mailbox = mailbox;
+
+        /* TODO: Add parent discovery and shit */
     }
 
     /**
@@ -100,6 +115,16 @@ public final class Folder
     {
         /* TODO: Implement me */
     }
+
+    /**
+    * Create a new Folder
+    */
+    public Folder createChildFolder(string folderName)
+    {
+        return null;
+    }
+
+
 }
 
 /**

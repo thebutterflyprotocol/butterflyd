@@ -144,12 +144,35 @@ public final class ButterflyClient : Thread
             */
             if(cmp(domain, server.domain) == 0)
             {
+                /* TODO: Do local mail delivery */
 
+                /* Get the Mailbox of a given user */
+                Mailbox userMailbox = new Mailbox(username);
+
+                /* Get the Inbox folder */
+                Folder inboxFolder = new Folder(userMailbox, null, "Inbox");
+
+                /* Store the message in their Inbox folder */
+                userMailbox.storeMessage(inboxFolder, mail);
             }
             else
             {
+                /* TODO: Do remote mail delivery */
 
+                /**
+                * Construct the server message to send to the
+                * remote server.
+                */
+                JSONValue messageBlock;
+                messageBlock["command"] = "deliverMail";
+                JSONValue mailBlock;
+                mailBlock["recipients"] = null; /* TODO: Get JSON array of strings */
+                mailBlock["message"] = mail.getMessage();
+                JSONValue requestBlock;
+                requestBlock["mail"] = mailBlock;
             }
+
+            writeln("Sent mail message");
         }
     }
 }
