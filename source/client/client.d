@@ -37,6 +37,10 @@ public final class ButterflyClient : Thread
 
     private ClientType connectionType;
 
+    /* TODO: Implement me */
+    private string username;
+    private string authToken;
+
     this(ButterflyServer server, Socket clientSocket)
     {
         super(&run);
@@ -137,6 +141,7 @@ public final class ButterflyClient : Thread
                     if(connectionType == ClientType.CLIENT)
                     {
                         /* TODO: Implement me */
+                        createFolder(commandBlock["request"]["folderName"].str());
                     }
                     else
                     {
@@ -207,6 +212,25 @@ public final class ButterflyClient : Thread
     }
 
     /**
+    * Create a folder in your mailbox
+    */
+    private void createFolder(string folderName)
+    {
+        /**
+        * Check if we are creating a base folder
+        * or a nested folder.
+        */
+        if(split(folderName, "/").length == 0)
+        {
+
+        }
+        else
+        {
+
+        }
+    }
+
+    /**
     * Delivers the mail to the local users
     */
     private void deliverMail(Mail mail)
@@ -217,8 +241,6 @@ public final class ButterflyClient : Thread
         /* Store the mail to each of the recipients */
         foreach(string recipient; recipients)
         {
-            
-
             /* Get the mail address */
             string[] mailAddress = split(recipient, "@");
 
