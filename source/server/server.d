@@ -2,6 +2,7 @@ module server.server;
 
 import core.thread : Thread;
 import std.socket : Socket;
+import client.client : ButterflyClient;
 
 public final class ButterflyServer
 {
@@ -29,7 +30,13 @@ public final class ButterflyServer
             /* Block for an incoming queued connection */
             Socket clientSocket = serverSocket.accept();
 
-            /* TODO: Add to array, create client and start client */
+            /**
+            * Create a new ButterflyClient to represent the
+            * client connection.
+            */
+            ButterflyClient client = new ButterflyClient(clientSocket);
+
+            /* TODO: Add to array and start client */
         }
 
     }
