@@ -74,7 +74,8 @@ public final class ButterflyClient : Thread
                 }
                 else if(cmp(command, "deliverMail") == 0)
                 {
-
+                    Mail mail = new Mail(commandBlock["request"]["mail"]);
+                    deliverMail(mail);
                 }
                 else if(cmp(command, "fetchMail") == 0)
                 {
@@ -116,6 +117,50 @@ public final class ButterflyClient : Thread
     }
 
     /**
+    * Delivers the mail to the local users
+    */
+    private void deliverMail(Mail mail)
+    {
+        /* Get a list of the recipients of the mail message */
+        string[] recipients = mail.getRecipients();
+
+        /* Store the mail to each of the recipients */
+        foreach(string recipient; recipients)
+        {
+            
+
+            /* Get the mail address */
+            string[] mailAddress = split(recipient, "@");
+
+            /* Get the username */
+            string username = mailAddress[0];
+
+            /* Get the domain */
+            string domain = mailAddress[1];
+
+            /**
+            * Check if the domain of this recipient is this server
+            * or if it is a remote server.
+            */
+            if(cmp(domain, server.domain) == 0)
+            {
+                writeln("Storing mail message to "~recipient~" ...");
+
+                /* Get the Mailbox of a given user */
+                Mailbox userMailbox = new Mailbox(username);
+
+                /* Get the Inbox folder */
+                Folder inboxFolder = new Folder(userMailbox, null, "Inbox");
+
+                /* Store the message in their Inbox folder */
+                userMailbox.storeMessage(inboxFolder, mail);
+
+                writeln("Stored mail message");
+            }
+        }
+    }
+
+    /**
     * Sends the mail message `mail` to the servers
     * listed in the recipients field.
     */
@@ -144,8 +189,6 @@ public final class ButterflyClient : Thread
             */
             if(cmp(domain, server.domain) == 0)
             {
-                /* TODO: Do local mail delivery */
-
                 /* Get the Mailbox of a given user */
                 Mailbox userMailbox = new Mailbox(username);
 
