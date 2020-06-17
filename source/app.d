@@ -5,12 +5,9 @@ import std.socket : Address, parseAddress;
 
 void main()
 {
-	writeln("Edit source/app.d to start your project.");
+	writeln("Starting butterflyd...");
 
-	Address address;
-
-	address = parseAddress("0.0.0.0", 2223);
-
-
+	/* Start the server */
+	Address address = parseAddress("0.0.0.0", 2223);
 	ButterflyServer server = new ButterflyServer(address);
 }
