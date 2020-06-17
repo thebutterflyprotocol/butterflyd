@@ -9,6 +9,15 @@ module client.mail;
 public final class Mailbox
 {
 
+    private Folder[] getFolders()
+    {
+        Folder[] folders;
+
+        /* TODO: Implement me */
+
+        return folders;
+    }
+
 }
 
 /**
@@ -19,7 +28,50 @@ public final class Mailbox
 */
 public final class Folder
 {
-    
+    /**
+    * The parent folder of this folder
+    */
+    private Folder parentFolder;
+
+    /**
+    * The name of this folder
+    */
+    private string folderName;
+
+    /**
+    * The folders within this folder
+    */
+
+
+    this(Folder parentFolder, string folderName)
+    {
+        this.parentFolder = parentFolder;
+        this.folderName = folderName;
+    }
+
+    /**
+    * Get the mail inside this folder
+    */
+    private Mail[] getMessages()
+    {
+        Mail[] messages;
+
+        /* TODO: Implement me */
+
+        return messages;
+    }
+
+    /**
+    * Get the folders within this folder
+    */
+    private Folder[] getFolders()
+    {
+        Folder[] folders;
+
+        /* TODO: Implement me */
+
+        return folders;
+    }
 }
 
 /**
