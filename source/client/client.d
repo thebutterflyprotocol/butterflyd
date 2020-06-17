@@ -78,12 +78,20 @@ public final class ButterflyClient : Thread
                 if(cmp(command, "auth") == 0)
                 {
                     /* TODO: Implement authentication */
+                    bool authStatus = authenticate(commandBlock);
 
-                    /**
-                    * If the auth if successful then upgrade to
-                    * a client-type connection.
-                    */
-                    connectionType = ClientType.CLIENT;
+                    if(authStatus)
+                    {
+                        /**
+                        * If the auth if successful then upgrade to
+                        * a client-type connection.
+                        */
+                        connectionType = ClientType.CLIENT;    
+                    }
+                    else
+                    {
+                        /* TODO: Error handling for authentication failure */
+                    }
                 }
                 else if(cmp(command, "sendMail") == 0)
                 {
@@ -209,6 +217,13 @@ public final class ButterflyClient : Thread
 
         /* Close the socket */
         clientSocket.close();
+    }
+
+    private bool authenticate(JSONValue commandBlock)
+    {
+        /* TODO: Implement me */
+        
+        return true;
     }
 
     /**
