@@ -6,7 +6,7 @@
 	"dependencies": {
 		"bformat": "~>1.0.7"
 	},
-	"description": "A minimal D application.",
+	"description": "Butterfly mail daemon",
 	"license": "AGPL v3",
 	"name": "butterflyd"
 }
