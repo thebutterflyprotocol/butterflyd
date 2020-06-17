@@ -9,7 +9,8 @@ void main()
 
 	Address address;
 
-	address = parseAddress("0.0.0.0:2223");
+	address = parseAddress("0.0.0.0", 2223);
+
 
 	ButterflyServer server = new ButterflyServer(address);
 }

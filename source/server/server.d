@@ -27,6 +27,7 @@ public final class ButterflyServer
         * `bindAddress` of which it will bind to.
         */
         serverSocket = new Socket(bindAddress.addressFamily, SocketType.STREAM, ProtocolType.TCP);
+        serverSocket.bind(bindAddress);
 
         /* Start accepting connections */
         run();
