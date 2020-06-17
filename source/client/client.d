@@ -26,6 +26,17 @@ public final class ButterflyClient : Thread
     */
     private bool active = true;
 
+    /**
+    * The type of connection
+    */
+    private enum ClientType
+    {
+        SERVER,
+        CLIENT
+    }
+
+    private ClientType clientType;
+
     this(ButterflyServer server, Socket clientSocket)
     {
         super(&run);
@@ -62,15 +73,37 @@ public final class ButterflyClient : Thread
                 /* TODO: Add command handling here */
                 if(cmp(command, "auth") == 0)
                 {
+                    /* TODO: Implement authentication */
 
+                    /**
+                    * If the auth if successful then upgrade to
+                    * a client-type connection.
+                    */
+                    clientType = ClientType.CLIENT;
                 }
                 else if(cmp(command, "sendMail") == 0)
                 {
-
+                    /* Make sure the connection is from a client */
+                    if(clientType == ClientType.CLIENT)
+                    {
+                        /* TODO: Implement me */
+                    }
+                    else
+                    {
+                        /* TODO: Add error handling */
+                    }
                 }
                 else if(cmp(command, "storeMail") == 0)
                 {
-
+                    /* Make sure the connection is from a client */
+                    if(clientType == ClientType.CLIENT)
+                    {
+                        /* TODO: Implement me */
+                    }
+                    else
+                    {
+                        /* TODO: Add error handling */
+                    }
                 }
                 else if(cmp(command, "deliverMail") == 0)
                 {
@@ -79,27 +112,75 @@ public final class ButterflyClient : Thread
                 }
                 else if(cmp(command, "fetchMail") == 0)
                 {
-
+                    /* Make sure the connection is from a client */
+                    if(clientType == ClientType.CLIENT)
+                    {
+                        /* TODO: Implement me */
+                    }
+                    else
+                    {
+                        /* TODO: Add error handling */
+                    }
                 }
                 else if(cmp(command, "createFolder") == 0)
                 {
-
+                    /* Make sure the connection is from a client */
+                    if(clientType == ClientType.CLIENT)
+                    {
+                        /* TODO: Implement me */
+                    }
+                    else
+                    {
+                        /* TODO: Add error handling */
+                    }
                 }
                 else if(cmp(command, "deleteFolder") == 0)
                 {
-
+                    /* Make sure the connection is from a client */
+                    if(clientType == ClientType.CLIENT)
+                    {
+                        /* TODO: Implement me */
+                    }
+                    else
+                    {
+                        /* TODO: Add error handling */
+                    }
                 }
                 else if(cmp(command, "addToFolder") == 0)
                 {
-
+                    /* Make sure the connection is from a client */
+                    if(clientType == ClientType.CLIENT)
+                    {
+                        /* TODO: Implement me */
+                    }
+                    else
+                    {
+                        /* TODO: Add error handling */
+                    }
                 }
                 else if(cmp(command, "removeFromFolder") == 0)
                 {
-
+                    /* Make sure the connection is from a client */
+                    if(clientType == ClientType.CLIENT)
+                    {
+                        /* TODO: Implement me */
+                    }
+                    else
+                    {
+                        /* TODO: Add error handling */
+                    }
                 }
                 else if(cmp(command, "listFolder") == 0)
                 {
-
+                    /* Make sure the connection is from a client */
+                    if(clientType == ClientType.CLIENT)
+                    {
+                        /* TODO: Implement me */
+                    }
+                    else
+                    {
+                        /* TODO: Add error handling */
+                    }
                 }
                 else
                 {
