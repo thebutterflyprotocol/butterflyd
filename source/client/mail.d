@@ -1,5 +1,7 @@
 module client.mail;
 
+/* TODO: Ref counter garbage collector for mail */
+
 /**
 * Mailbox
 *
@@ -93,4 +95,19 @@ public final class Folder
 public final class Mail
 {
 
+    /* TODO (think about): Before id of mail (for creating) and also for existing */
+    private string[] recipients;
+
+    public static Mail createMail(JSONValue mailBlock)
+    {
+        Mail createdMail;
+
+
+        return createdMail;
+    }
+
+    public void deleteMail()
+    {
+        /* TODO: Implement me */
+    }
 }
