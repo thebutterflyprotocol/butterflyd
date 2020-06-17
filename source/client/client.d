@@ -142,7 +142,7 @@ public final class ButterflyClient : Thread
             * Check if the domain of this recipient is this server
             * or if it is a remote server.
             */
-            if(cmp(domain, ""))
+            if(cmp(domain, server.domain) == 0)
             {
 
             }

@@ -21,7 +21,7 @@ public final class ButterflyServer
     private bool active = true;
 
     /* TODO: Server domain */
-    private string domain;
+    public string domain;
 
     this(Address bindAddress)
     {
@@ -37,6 +37,9 @@ public final class ButterflyServer
 
         /* Close the socket */
         serverSocket.close();
+
+        /* TODO: Set this to the correct value */
+        domain = "poes";
     }
 
     private void run()
