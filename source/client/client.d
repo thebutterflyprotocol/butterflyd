@@ -225,7 +225,7 @@ public final class ButterflyClient : Thread
         */
         if(split(folderName, "/").length == 0)
         {
-            newFolder = mailbox.addBaseFolder(folderName);
+            //newFolder = mailbox.addBaseFolder(folderName);
         }
         else
         {
