@@ -52,7 +52,7 @@ public final class Folder
     /**
     * Get the mail inside this folder
     */
-    private Mail[] getMessages()
+    public Mail[] getMessages()
     {
         Mail[] messages;
 
@@ -64,13 +64,24 @@ public final class Folder
     /**
     * Get the folders within this folder
     */
-    private Folder[] getFolders()
+    public Folder[] getFolders()
     {
         Folder[] folders;
 
         /* TODO: Implement me */
 
         return folders;
+    }
+
+    /**
+    * Delete this folder
+    *
+    * This deletes all the sub-folders and the mail
+    * within each.
+    */
+    public void deleteFolder()
+    {
+        /* TODO: Implement me */
     }
 }
 
