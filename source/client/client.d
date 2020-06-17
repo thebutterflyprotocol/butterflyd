@@ -214,20 +214,25 @@ public final class ButterflyClient : Thread
     /**
     * Create a folder in your mailbox
     */
-    private void createFolder(string folderName)
+    private Folder createFolder(string folderName)
     {
+        /* The newly created Folder */
+        Folder newFolder;
+
         /**
         * Check if we are creating a base folder
         * or a nested folder.
         */
         if(split(folderName, "/").length == 0)
         {
-
+            newFolder = mailbox.addBaseFolder(folderName);
         }
         else
         {
-
+            //newFolder = ;
         }
+
+        return newFolder;
     }
 
     /**

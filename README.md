@@ -28,13 +28,8 @@ JSON received:
 ```json
 {
 	"status" : <status>,
-	"response" : {
-		"token" : "<authenticationToken>"
-	}
 }
 ```
-
-All further commands, that require authentication, will require this token.
 
 ### Sending mail
 
@@ -46,7 +41,6 @@ JSON sent:
 {
 	"command" : "sendMail",
 	"request" : {
-		"authenticationToken" : "<authenticationToken>",
 		"mail" : {
 			"recipients" : [],
 			"message" : ...
@@ -73,7 +67,6 @@ JSON sent:
 {
 	"command" : "storeMail",
 	"request" : {
-		"authenticationToken" : "<authenticationToken>",
 		"mail" : {
 			"recipients" : [],
 			"message" : ...
