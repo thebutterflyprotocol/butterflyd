@@ -1,5 +1,7 @@
 module client.mail;
 
+import std.json;
+
 /* TODO: Ref counter garbage collector for mail */
 
 /**
