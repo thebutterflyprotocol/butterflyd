@@ -127,6 +127,14 @@ public final class Mail
         {
             recipients ~= recipient.str();
         }
+
+        /* Perform a sanity check on the mail message */
+        sanityCheck();
+    }
+
+    private void sanityCheck()
+    {
+        /* TODO: Throw error if the message is somehow malformed */
     }
 
     public string[] getRecipients()
