@@ -35,7 +35,7 @@ public final class ButterflyClient : Thread
         CLIENT
     }
 
-    private ClientType clientType;
+    private ClientType connectionType;
 
     this(ButterflyServer server, Socket clientSocket)
     {
@@ -79,12 +79,12 @@ public final class ButterflyClient : Thread
                     * If the auth if successful then upgrade to
                     * a client-type connection.
                     */
-                    clientType = ClientType.CLIENT;
+                    connectionType = ClientType.CLIENT;
                 }
                 else if(cmp(command, "sendMail") == 0)
                 {
                     /* Make sure the connection is from a client */
-                    if(clientType == ClientType.CLIENT)
+                    if(connectionType == ClientType.CLIENT)
                     {
                         /* TODO: Implement me */
                     }
@@ -96,7 +96,7 @@ public final class ButterflyClient : Thread
                 else if(cmp(command, "storeMail") == 0)
                 {
                     /* Make sure the connection is from a client */
-                    if(clientType == ClientType.CLIENT)
+                    if(connectionType == ClientType.CLIENT)
                     {
                         /* TODO: Implement me */
                     }
@@ -107,13 +107,22 @@ public final class ButterflyClient : Thread
                 }
                 else if(cmp(command, "deliverMail") == 0)
                 {
-                    Mail mail = new Mail(commandBlock["request"]["mail"]);
-                    deliverMail(mail);
+                    /* Make sure the connection is from a server */
+                    if(connectionType == ClientType.SERVER)
+                    {
+                        /* TODO: Implement me */
+                        Mail mail = new Mail(commandBlock["request"]["mail"]);
+                        deliverMail(mail);
+                    }
+                    else
+                    {
+                        /* TODO: Add error handling */
+                    }
                 }
                 else if(cmp(command, "fetchMail") == 0)
                 {
                     /* Make sure the connection is from a client */
-                    if(clientType == ClientType.CLIENT)
+                    if(connectionType == ClientType.CLIENT)
                     {
                         /* TODO: Implement me */
                     }
@@ -125,7 +134,7 @@ public final class ButterflyClient : Thread
                 else if(cmp(command, "createFolder") == 0)
                 {
                     /* Make sure the connection is from a client */
-                    if(clientType == ClientType.CLIENT)
+                    if(connectionType == ClientType.CLIENT)
                     {
                         /* TODO: Implement me */
                     }
@@ -137,7 +146,7 @@ public final class ButterflyClient : Thread
                 else if(cmp(command, "deleteFolder") == 0)
                 {
                     /* Make sure the connection is from a client */
-                    if(clientType == ClientType.CLIENT)
+                    if(connectionType == ClientType.CLIENT)
                     {
                         /* TODO: Implement me */
                     }
@@ -149,7 +158,7 @@ public final class ButterflyClient : Thread
                 else if(cmp(command, "addToFolder") == 0)
                 {
                     /* Make sure the connection is from a client */
-                    if(clientType == ClientType.CLIENT)
+                    if(connectionType == ClientType.CLIENT)
                     {
                         /* TODO: Implement me */
                     }
@@ -161,7 +170,7 @@ public final class ButterflyClient : Thread
                 else if(cmp(command, "removeFromFolder") == 0)
                 {
                     /* Make sure the connection is from a client */
-                    if(clientType == ClientType.CLIENT)
+                    if(connectionType == ClientType.CLIENT)
                     {
                         /* TODO: Implement me */
                     }
@@ -173,7 +182,7 @@ public final class ButterflyClient : Thread
                 else if(cmp(command, "listFolder") == 0)
                 {
                     /* Make sure the connection is from a client */
-                    if(clientType == ClientType.CLIENT)
+                    if(connectionType == ClientType.CLIENT)
                     {
                         /* TODO: Implement me */
                     }
