@@ -1,0 +1,15 @@
+.dub
+docs.json
+__dummy.html
+docs/
+/butterflyd
+butterflyd.so
+butterflyd.dylib
+butterflyd.dll
+butterflyd.a
+butterflyd.lib
+butterflyd-test-*
+*.exe
+*.o
+*.obj
+*.lst
