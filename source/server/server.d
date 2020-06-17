@@ -1,6 +1,5 @@
 module server.server;
 
-import core.thread : Thread;
 import std.socket : Socket;
 import client.client : ButterflyClient;
 
@@ -36,7 +35,10 @@ public final class ButterflyServer
             */
             ButterflyClient client = new ButterflyClient(clientSocket);
 
-            /* TODO: Add to array and start client */
+            /* Start the client thread */
+            client.start();
+
+            /* TODO: Add to array */
         }
 
     }
