@@ -20,6 +20,9 @@ public final class ButterflyServer
     */
     private bool active = true;
 
+    /* TODO: Server domain */
+    private string domain;
+
     this(Address bindAddress)
     {
         /**
@@ -52,7 +55,7 @@ public final class ButterflyServer
             * Create a new ButterflyClient to represent the
             * client connection.
             */
-            ButterflyClient client = new ButterflyClient(clientSocket);
+            ButterflyClient client = new ButterflyClient(this, clientSocket);
 
             /* Start the client thread */
             client.start();

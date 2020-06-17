@@ -6,9 +6,16 @@ import bmessage;
 import std.stdio;
 import std.json;
 import std.string;
+import client.mail;
+import server.server;
 
 public final class ButterflyClient : Thread
 {
+    /**
+    * The associated server
+    */
+    private ButterflyServer server;
+
     /**
     * Socket of the client connection
     */
@@ -19,10 +26,11 @@ public final class ButterflyClient : Thread
     */
     private bool active = true;
 
-    this(Socket clientSocket)
+    this(ButterflyServer server, Socket clientSocket)
     {
         super(&run);
         this.clientSocket = clientSocket;
+        this.server = server;
     }
 
     private void run()
@@ -105,5 +113,43 @@ public final class ButterflyClient : Thread
 
         /* Close the socket */
         clientSocket.close();
+    }
+
+    /**
+    * Sends the mail message `mail` to the servers
+    * listed in the recipients field.
+    */
+    private void sendMail(Mail mail)
+    {
+        /* Get a list of the recipients of the mail message */
+        string[] recipients = mail.getRecipients();
+
+        /* Send the mail to each of the recipients */
+        foreach(string recipient; recipients)
+        {
+            writeln("Sending mail message to "~recipient~" ...");
+
+            /* Get the mail address */
+            string[] mailAddress = split(recipient, "@");
+
+            /* Get the username */
+            string username = mailAddress[0];
+
+            /* Get the domain */
+            string domain = mailAddress[1];
+
+            /**
+            * Check if the domain of this recipient is this server
+            * or if it is a remote server.
+            */
+            if(cmp(domain, ""))
+            {
+
+            }
+            else
+            {
+
+            }
+        }
     }
 }
