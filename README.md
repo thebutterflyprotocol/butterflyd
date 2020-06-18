@@ -31,6 +31,30 @@ JSON received:
 }
 ```
 
+### Registration
+
+To register a new account on the server one must provide the username (`<username>`) and password (`<password>`) wanting to be used as shown below:
+
+JSON sent:
+
+```json
+{
+	"command" : "register",
+	"request" : {
+		"username" : "<username>",
+		"password" : "<password>"
+	}
+}
+```
+
+JSON received:
+
+```json
+{
+	"status" : <statusCode>
+}
+```
+
 ### Sending mail
 
 To send mail the following TODO
