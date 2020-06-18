@@ -236,7 +236,14 @@ public final class ButterflyClient : Thread
             /* TODO: Write response here */
 
             /* Write the response block to the client */
-            sendMessage(clientSocket, cast(byte[])toJSON(responseBlock));
+            bool sendStatus = sendMessage(clientSocket, cast(byte[])toJSON(responseBlock));
+
+            /* If there was an error writing the response back */
+            if(!sendStatus)
+            {
+                /* End the session */
+                active = false;
+            }
         }
 
         /* Close the socket */
