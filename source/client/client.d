@@ -41,7 +41,7 @@ public final class ButterflyClient : Thread
     * The Mailbox (if client) of the connected
     * user.
     */
-    private Mailbox userMailbox;
+    private Mailbox mailbox;
 
     this(ButterflyServer server, Socket clientSocket)
     {
@@ -97,7 +97,7 @@ public final class ButterflyClient : Thread
                         /**
                         * Set the user's associated Mailbox up
                         */
-                        userMailbox = new Mailbox(authUsername);
+                        mailbox = new Mailbox(authUsername);
                     }
                     else
                     {
@@ -249,11 +249,14 @@ public final class ButterflyClient : Thread
         * Check if we are creating a base folder
         * or a nested folder.
         */
-        /* TODO: Logic of below */
-        if(split(folderName, "/").length == 0)
+        bool isBaseFolder = true; /* TODO: Logic work out */
+
+        /* If it is a base folder wanting to be created */
+        if(isBaseFolder)
         {
-            //newFolder = mailbox.addBaseFolder(folderName);
+            newFolder = mailbox.addBaseFolder(folderName);
         }
+        /* If it is a nested folder wanting to be created */
         else
         {
             //newFolder = ;
