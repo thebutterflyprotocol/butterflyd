@@ -19,6 +19,11 @@ public final class Mailbox
     */
     private string username;
 
+    // public static bool isMailbox(string username)
+    // {
+    //     return true;
+    // }
+
     public static Mailbox createMailbox(string username)
     {
         Mailbox newMailbox;
@@ -72,10 +77,10 @@ public final class Mailbox
     public void storeMessage(Folder folder, Mail message)
     {
         /* TODO: Traverse the folder path */
+        string kaka;
+        string filename = folder.folderPath~kaka;
 
-        /* TODO: Store the message */
-
-        /* TODO: Generate unique ID for mail */
+        /* TODO: Store the message in file `filename` */
     }
 
     public void deleteMailbox()
@@ -92,8 +97,6 @@ public final class Mailbox
         /* TODO: Delete the mailbox directory */
     }
 }
-
-/* TODO: Rework the below to allow folder creation to be apart pf it */
 
 /**
 * Folder
