@@ -220,7 +220,7 @@ public final class Mail
         Mail newMail;
 
         /* TODO: Store to disk in mailstore */
-        mailbox.getIDFor(mailBlock);
+        //mailbox.getIDFor(mailBlock);
 
         /* TODO: Re think our system */
         return newMail;
