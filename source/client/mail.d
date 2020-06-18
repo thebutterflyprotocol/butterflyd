@@ -129,7 +129,7 @@ public final class Folder
         /* TODO: Add parent discovery and shit */
 
         /* TODO: Recursively travel up the tree and generate the fodlerPath */
-        folderPath = generateFodlerPath();
+        folderPath = generateFolderPath();
     }
 
     /**
@@ -189,7 +189,7 @@ public final class Folder
         return newFolder;
     }
 
-    public string generateFodlerPath()
+    public string generateFolderPath()
     {
         /* TODO: Build path gpijg upwards */
         return "path";
