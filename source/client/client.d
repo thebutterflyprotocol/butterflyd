@@ -37,9 +37,11 @@ public final class ButterflyClient : Thread
 
     private ClientType connectionType;
 
-    /* TODO: Implement me */
-    private string username;
-    private string authToken;
+    /**
+    * The Mailbox (if client) of the connected
+    * user.
+    */
+    private Mailbox userMailbox;
 
     this(ButterflyServer server, Socket clientSocket)
     {
@@ -77,8 +79,12 @@ public final class ButterflyClient : Thread
                 /* TODO: Add command handling here */
                 if(cmp(command, "auth") == 0)
                 {
+                    /* Get the username and password */
+                    string authUsername = commandBlock["request"]["username"].str(); 
+                    string authPassword = commandBlock["request"]["password"].str();
+
                     /* TODO: Implement authentication */
-                    bool authStatus = authenticate(commandBlock);
+                    bool authStatus = authenticate(authUsername, authPassword);
 
                     if(authStatus)
                     {
@@ -86,7 +92,12 @@ public final class ButterflyClient : Thread
                         * If the auth if successful then upgrade to
                         * a client-type connection.
                         */
-                        connectionType = ClientType.CLIENT;    
+                        connectionType = ClientType.CLIENT;   
+
+                        /**
+                        * Set the user's associated Mailbox up
+                        */
+                        userMailbox = new Mailbox(authUsername);
                     }
                     else
                     {
@@ -219,10 +230,10 @@ public final class ButterflyClient : Thread
         clientSocket.close();
     }
 
-    private bool authenticate(JSONValue commandBlock)
+    private bool authenticate(string username, string password)
     {
         /* TODO: Implement me */
-        
+
         return true;
     }
 
@@ -238,6 +249,7 @@ public final class ButterflyClient : Thread
         * Check if we are creating a base folder
         * or a nested folder.
         */
+        /* TODO: Logic of below */
         if(split(folderName, "/").length == 0)
         {
             //newFolder = mailbox.addBaseFolder(folderName);
