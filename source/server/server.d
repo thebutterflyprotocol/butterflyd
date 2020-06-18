@@ -2,6 +2,7 @@ module server.server;
 
 import std.socket : Socket, Address, SocketType, ProtocolType;
 import client.client : ButterflyClient;
+import std.file : mkdir, exists, isDir;
 
 public final class ButterflyServer
 {
@@ -50,8 +51,25 @@ public final class ButterflyServer
     private void directoryCheck()
     {
         /* TODO: Create the `mailboxes/` directory, if it does not exist */
-        
-        
+
+        /* Check to make sure there is a fs node at `mailboxes` */
+        if(exists("mailboxes"))
+        {
+            /* Make sure it is a directory */
+            if(isDir("mailboxes"))
+            {
+
+            }
+            else
+            {
+                /* TODO: Error handling */
+            }
+        }
+        else
+        {
+            /* Create the `mailboxes` directory */
+            mkdir("mailboxes");
+        }   
     }
 
     private void run()
