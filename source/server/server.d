@@ -38,14 +38,14 @@ public final class ButterflyServer
         serverSocket = new Socket(bindAddress.addressFamily, SocketType.STREAM, ProtocolType.TCP);
         serverSocket.bind(bindAddress);
 
+        /* TODO: Set this to the correct value */
+        domain = "poes";
+
         /* Start accepting connections */
         run();
 
         /* Close the socket */
         serverSocket.close();
-
-        /* TODO: Set this to the correct value */
-        domain = "poes";
     }
 
     private void directoryCheck()

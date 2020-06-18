@@ -448,6 +448,8 @@ public final class ButterflyClient : Thread
             */
             if(cmp(domain, server.domain) == 0)
             {
+                writeln("Local delivery occurring...");
+
                 /* Get the Mailbox of a given user */
                 Mailbox userMailbox = new Mailbox(username);
 
@@ -460,6 +462,7 @@ public final class ButterflyClient : Thread
             else
             {
                 /* TODO: Do remote mail delivery */
+                writeln("Remote delivery occurring...");
 
                 /**
                 * Construct the server message to send to the
@@ -467,12 +470,16 @@ public final class ButterflyClient : Thread
                 */
                 JSONValue messageBlock;
                 messageBlock["command"] = "deliverMail";
-                messageBlock["request"]["mail"] = mailBlock;
+
+                JSONValue requestBlock;
+                requestBlock["mail"] = mailBlock;
+                messageBlock["request"] = requestBlock;
 
                 import std.socket : AddressFamily, SocketType, ProtocolType, parseAddress, Address;
 
                 /* Deliver the mail to the remote server */
                 Socket remoteServer = new Socket(AddressFamily.INET, SocketType.STREAM, ProtocolType.TCP);
+                
                 remoteServer.connect(parseAddress(domain, 6969));
                 sendMessage(remoteServer, cast(byte[])toJSON(messageBlock));
                 remoteServer.close();
