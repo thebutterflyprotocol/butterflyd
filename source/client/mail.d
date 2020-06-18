@@ -159,14 +159,13 @@ public final class Folder
     {
         Folder[] folders;
 
-        /* TODO: Implement me */
-
+        /* Get a list of all the directories within this directory */
         foreach(DirEntry directory; dirEntries(folderPath, SpanMode.shallow))
         {
             /* Only append fodlers */
             if(directory.isDir())
             {
-                folders ~= new Folder(mailbox, directory.name());
+                folders ~= new Folder(mailbox, folderPath~"/"~directory.name());
             }
         }
         
