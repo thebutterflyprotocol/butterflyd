@@ -62,6 +62,8 @@ public final class ButterflyClient : Thread
         JSONValue responseBlock;
         long status = 0;
 
+        /* TODO: Check why it loops again for cutout, dead session */
+
         /* TODO: Implement loop read-write here */
         while(active)
         {
