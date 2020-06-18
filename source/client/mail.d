@@ -214,17 +214,10 @@ public final class Folder
         return newFolder;
     }
 
-    private void generateFolderPath()
-    {
-        /* TODO: Build path gpijg upwards */
-        folderPath = "path";
-    }
-
     override public string toString()
     {
         return folderPath;
     }
-
 }
 
 /**
