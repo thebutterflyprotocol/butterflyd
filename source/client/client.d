@@ -62,7 +62,10 @@ public final class ButterflyClient : Thread
         JSONValue responseBlock;
         long status = 0;
 
-        /* TODO: Check why it loops again for cutout, dead session */
+        /**
+        * TODO: My error handling in bformat is not good.
+        * A dead connection sitll returns successful write.
+        */
 
         /* TODO: Implement loop read-write here */
         while(active)
@@ -110,6 +113,21 @@ public final class ButterflyClient : Thread
                     else
                     {
                         /* TODO: Error handling for authentication failure */
+                    }
+                }
+                /* TODO: Add command handling here */
+                else if(cmp(command, "register") == 0)
+                {
+                    /* Get the username and password */
+                    string regUsername = commandBlock["request"]["username"].str(); 
+                    string regPassword = commandBlock["request"]["password"].str();
+
+                    /* TODO: Implement registration */
+                    bool regStatus = register(regUsername, regPassword);
+
+                    if(!regStatus)
+                    {
+                        /* TODO: Implement error handling for failed registration */
                     }
                 }
                 else if(cmp(command, "sendMail") == 0)
@@ -298,6 +316,21 @@ public final class ButterflyClient : Thread
     private bool authenticate(string username, string password)
     {
         /* TODO: Implement me */
+
+        return true;
+    }
+
+    private bool register(string username, string password)
+    {
+        /* TODO Implement me */
+
+        /* Return false in the case that registration fails */
+        if(Mailbox.isMailbox(username))
+        {
+            return false;
+        }
+
+        Mailbox.createMailbox(username);
 
         return true;
     }

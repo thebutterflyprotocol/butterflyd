@@ -6,6 +6,11 @@ import std.stdio;
 
 /* TODO: Ref counter garbage collector for mail */
 
+public class ButterflyException
+{
+
+}
+
 /**
 * Mailbox
 *
@@ -25,9 +30,16 @@ public final class Mailbox
     //     return true;
     // }
 
+    public static bool isMailbox(string username)
+    {
+        return exists("mailboxes/"~username) && isDir("mailboxes/"~username);
+    }
+
     public static Mailbox createMailbox(string username)
     {
         Mailbox newMailbox;
+
+        
 
         /* TODO: Implement me */
 
