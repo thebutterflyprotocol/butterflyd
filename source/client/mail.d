@@ -2,6 +2,7 @@ module client.mail;
 
 import std.json;
 import std.file;
+import std.stdio;
 
 /* TODO: Ref counter garbage collector for mail */
 
@@ -301,12 +302,27 @@ public final class Mail
         return recipients;
     }
 
+    
 
     public JSONValue getMessage()
     {
         JSONValue messageBlock;
 
+        /* Get the file system path to this message */
+        string messageFilePath = mailbox.username~"/"~folder.folderPath~"/"~mailID;
+
         /* TODO: Implement me */
+        File file;
+        file.open(messageFilePath);
+
+        byte[] fileBytes;
+        fileBytes.length = file.size();
+        fileBytes = file.rawRead(fileBytes);
+        file.close();
+        
+        messageBlock = parseJSON(cast(string)fileBytes);
+
+        
         
         return messageBlock;
     }
