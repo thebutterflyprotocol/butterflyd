@@ -90,8 +90,11 @@ public final class Mailbox
     public void storeMessage(Folder folder, string mailID, JSONValue mailBlock)
     {
         /* TODO: Traverse the folder path */
-        string kaka;
-        string filename = folder.folderPath~kaka;
+        string filename = "mailboxes/"~username~"/"~folder.folderPath~"/"~mailID;
+
+        File mailFile;
+        mailFile.open(filename, "wb");
+        mailFile.rawWrite(cast(byte[])toJSON(mailBlock));
 
         /* TODO: Store the message in file `filename` */
     }
