@@ -220,6 +220,7 @@ public final class ButterflyClient : Thread
                 }
                 else if(cmp(command, "totsiens") == 0)
                 {
+                    /* Close the connection on next loop condition check */
                     active = false;
                 }
                 else
@@ -233,6 +234,9 @@ public final class ButterflyClient : Thread
             }
 
             /* TODO: Write response here */
+
+            /* Write the response block to the client */
+            sendMessage(clientSocket, cast(byte[])toJSON(responseBlock));
         }
 
         /* Close the socket */
