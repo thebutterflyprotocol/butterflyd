@@ -147,7 +147,16 @@ public final class Folder
     {
         Mail[] messages;
 
-        /* TODO: Implement me */
+        /* Get a list of all the files within this directory */
+        foreach(DirEntry dirEntry; dirEntries(folderPath, SpanMode.shallow))
+        {
+            /* Only append files */
+            if(dirEntry.isFile())
+            {
+                messages ~= new Mail()
+                folders ~= new Folder(mailbox, folderPath~"/"~dirEntry.name());
+            }
+        }
 
         return messages;
     }
@@ -160,12 +169,12 @@ public final class Folder
         Folder[] folders;
 
         /* Get a list of all the directories within this directory */
-        foreach(DirEntry directory; dirEntries(folderPath, SpanMode.shallow))
+        foreach(DirEntry dirEntry; dirEntries(folderPath, SpanMode.shallow))
         {
-            /* Only append fodlers */
-            if(directory.isDir())
+            /* Only append folders */
+            if(dirEntry.isDir())
             {
-                folders ~= new Folder(mailbox, folderPath~"/"~directory.name());
+                folders ~= new Folder(mailbox, folderPath~"/"~dirEntry.name());
             }
         }
         
@@ -239,7 +248,7 @@ public final class Mail
         return newMail;
     }
 
-    this(string id)
+    this(Folder folder, string id)
     {
         this.id = id;
 
