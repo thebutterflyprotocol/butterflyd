@@ -1,6 +1,7 @@
 module client.mail;
 
 import std.json;
+import std.file;
 
 /* TODO: Ref counter garbage collector for mail */
 
@@ -25,6 +26,9 @@ public final class Mailbox
         /* TODO: Implement me */
 
         /* TODO: Create folder for mailbox as `mailboxes/<username>` */
+
+        /* Create the mailbox directory */
+        mkdir("mailboxes/"~username); /* TODO: Error handling */
 
         newMailbox = new Mailbox(username);
 
@@ -57,6 +61,8 @@ public final class Mailbox
         Folder newFolder;
 
         /* TODO: Implement folder creation */
+
+        mkdir("mailboxes/"~username~"/"~folderName);
 
         newFolder = new Folder(this, null, folderName);
 
@@ -112,6 +118,8 @@ public final class Folder
     */
     private Mailbox mailbox;
 
+    private string folderPath;
+
     this(Mailbox mailbox, Folder parentFolder, string folderName)
     {
         this.parentFolder = parentFolder;
@@ -119,6 +127,9 @@ public final class Folder
         this.mailbox = mailbox;
 
         /* TODO: Add parent discovery and shit */
+
+        /* TODO: Recursively travel up the tree and generate the fodlerPath */
+        folderPath = generateFodlerPath();
     }
 
     /**
@@ -142,6 +153,11 @@ public final class Folder
 
         /* TODO: Implement me */
 
+        foreach(string directory; dirEntries(folderPath, SpanMode.shallow))
+        {
+            folders ~= new Folder(mailbox, this, directory);
+        }
+        
         return folders;
     }
 
@@ -171,7 +187,7 @@ public final class Folder
         return newFolder;
     }
 
-    public string getPath()
+    public string generateFodlerPath()
     {
         /* TODO: Build path gpijg upwards */
         return "path";
@@ -179,7 +195,7 @@ public final class Folder
 
     override public string toString()
     {
-        return getPath();
+        return folderPath;
     }
 
 }
