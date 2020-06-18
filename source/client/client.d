@@ -419,5 +419,11 @@ public final class ButterflyClient : Thread
 
             writeln("Sent mail message");
         }
+
+        /* Store the message in this user's "Sent" folder */
+        Folder sentFolder = new Folder(mailbox, "Sent");
+
+        /* Store the message in their Inbox folder */
+        Mail.createMail(mailbox, sentFolder, mailBlock);
     }
 }
