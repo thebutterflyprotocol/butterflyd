@@ -13,3 +13,4 @@ butterflyd-test-*
 *.o
 *.obj
 *.lst
+mailboxes/
