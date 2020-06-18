@@ -285,7 +285,10 @@ public final class Mail
 
     private void deleteMessage()
     {
-        mailbox.deleteMessage(folder, mailID);
+        /* Get the file system path to this message */
+        string messageFilePath = mailbox.username~"/"~folder.folderPath~"/"~mailID;
+
+        remove(messageFilePath);
     }
 
     private void sanityCheck()
@@ -293,14 +296,6 @@ public final class Mail
         /* TODO: Throw error if the message is somehow malformed */
     }
 
-    public string[] getRecipients()
-    {
-        string[] recipients;
-
-        /* TODO: Implement me */
-
-        return recipients;
-    }
 
     
 
