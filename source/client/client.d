@@ -132,7 +132,7 @@ public final class ButterflyClient : Thread
                         Folder storeFolder = new Folder(mailbox, commandBlock["request"]["folder"].str());
                        
                         /* Store the message in the mailbox */
-                        storeMail(storeMail, mailBlock);
+                        storeMail(storeFolder, mailBlock);
                     }
                     else
                     {
@@ -145,8 +145,7 @@ public final class ButterflyClient : Thread
                     if(connectionType == ClientType.SERVER)
                     {
                         /* TODO: Implement me */
-                        Mail mail = new Mail(commandBlock["request"]["mail"]);
-                        deliverMail(mail);
+                        deliverMail(commandBlock["request"]["mail"]);
                     }
                     else
                     {
@@ -312,10 +311,14 @@ public final class ButterflyClient : Thread
     /**
     * Delivers the mail to the local users
     */
-    private void deliverMail(Mail mail)
+    private void deliverMail(JSONValue mailBlock)
     {
         /* Get a list of the recipients of the mail message */
-        string[] recipients = mail.getRecipients();
+        string[] recipients;
+        foreach(JSONValue recipient; mailBlock["recipients"].array())
+        {
+            recipients ~= recipient.str();
+        }
 
         /* Store the mail to each of the recipients */
         foreach(string recipient; recipients)
@@ -341,10 +344,10 @@ public final class ButterflyClient : Thread
                 Mailbox userMailbox = new Mailbox(username);
 
                 /* Get the Inbox folder */
-                // Folder inboxFolder = new Folder(userMailbox, null, "Inbox");
+                Folder inboxFolder = new Folder(userMailbox, "Inbox");
 
                 /* Store the message in their Inbox folder */
-                // userMailbox.storeMessage(inboxFolder, mail);
+                Mail.createMail(userMailbox, inboxFolder, mailBlock);
 
                 writeln("Stored mail message");
             }
@@ -355,10 +358,14 @@ public final class ButterflyClient : Thread
     * Sends the mail message `mail` to the servers
     * listed in the recipients field.
     */
-    private void sendMail(Mail mail)
+    private void sendMail(JSONValue mailBlock)
     {
         /* Get a list of the recipients of the mail message */
-        string[] recipients = mail.getRecipients();
+        string[] recipients;
+        foreach(JSONValue recipient; mailBlock["recipients"].array())
+        {
+            recipients ~= recipient.str();
+        }
 
         /* Send the mail to each of the recipients */
         foreach(string recipient; recipients)
@@ -384,10 +391,10 @@ public final class ButterflyClient : Thread
                 Mailbox userMailbox = new Mailbox(username);
 
                 /* Get the Inbox folder */
-                // Folder inboxFolder = new Folder(userMailbox, null, "Inbox");
+                Folder inboxFolder = new Folder(userMailbox, "Inbox");
 
                 /* Store the message in their Inbox folder */
-                // userMailbox.storeMessage(inboxFolder, mail);
+                Mail.createMail(userMailbox, inboxFolder, mailBlock);
             }
             else
             {
@@ -399,11 +406,15 @@ public final class ButterflyClient : Thread
                 */
                 JSONValue messageBlock;
                 messageBlock["command"] = "deliverMail";
-                JSONValue mailBlock;
-                mailBlock["recipients"] = null; /* TODO: Get JSON array of strings */
-                mailBlock["message"] = mail.getMessage();
-                JSONValue requestBlock;
-                requestBlock["mail"] = mailBlock;
+                messageBlock["request"]["mail"] = mailBlock;
+
+                import std.socket : AddressFamily, SocketType, ProtocolType, parseAddress, Address;
+
+                /* Deliver the mail to the remote server */
+                Socket remoteServer = new Socket(AddressFamily.INET, SocketType.STREAM, ProtocolType.TCP);
+                remoteServer.connect(parseAddress(domain, 6969));
+                sendMessage(remoteServer, cast(byte[])toJSON(messageBlock));
+                writeln("Message delivered to server "~domain);
             }
 
             writeln("Sent mail message");

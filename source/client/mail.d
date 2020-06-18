@@ -83,6 +83,11 @@ public final class Mailbox
         /* TODO: Store the message in file `filename` */
     }
 
+    public void deleteMessage(Folder folder, string mailID)
+    {
+        /* TODO: Implement me */
+    }
+
     public void deleteMailbox()
     {
         /* TODO: Run deletion on all folders */
@@ -229,11 +234,20 @@ public final class Folder
 public final class Mail
 {
 
-   /**
-   * The associated Mailbox
-   */
+    /**
+    * The associated Mailbox
+    */
+    private Mailbox mailbox;
 
-    private string id;
+    /**
+    * The associated Folder
+    */
+    private Folder folder;
+
+    /**
+    * The mail message's name
+    */
+    private string mailID;
 
     public static Mail createMail(Mailbox mailbox, Folder folder, JSONValue mailBlock)
     {
@@ -261,28 +275,16 @@ public final class Mail
         return "fhjdkshfjsdgfjk";
     }
 
-    this(Mailbox mailbox, Folder folder, string id)
+    this(Mailbox mailbox, Folder folder, string mailID)
     {
-
-        this.id = id;
-
-        /* TODO: Fetch mail here, or rather in a method */
+        this.mailbox = mailbox;
+        this.folder = folder;
+        this.mailID = mailID;
     }
 
-    this(JSONValue mailBlock)
+    private void deleteMessage()
     {
-        /* TODO: */
-        this.messageBlock = mailBlock["message"];
-
-        /* Populate the array of recipients */
-        JSONValue[] recipientArray = mailBlock["recipients"].array();
-        foreach(JSONValue recipient; recipientArray)
-        {
-            recipients ~= recipient.str();
-        }
-
-        /* Perform a sanity check on the mail message */
-        sanityCheck();
+        mailbox.deleteMessage(folder, mailID);
     }
 
     private void sanityCheck()
@@ -292,12 +294,20 @@ public final class Mail
 
     public string[] getRecipients()
     {
+        string[] recipients;
+
+        /* TODO: Implement me */
+
         return recipients;
     }
 
 
     public JSONValue getMessage()
     {
+        JSONValue messageBlock;
+
+        /* TODO: Implement me */
+        
         return messageBlock;
     }
 }
