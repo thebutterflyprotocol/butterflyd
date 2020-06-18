@@ -159,6 +159,20 @@ public final class ButterflyClient : Thread
                     if(connectionType == ClientType.CLIENT)
                     {
                         /* TODO: Implement me */
+
+                        /* The folder where the mail message is stored */
+                        Folder fetchFolder = new Folder(mailbox, commandBlock["request"]["folder"].str());
+
+                        /* The mail ID of the mail message */
+                        string mailID = commandBlock["request"]["id"].str();
+
+                        /* Fetch the Mail */
+                        Mail fetchedMail = new Mail(mailbox, fetchFolder, mailID);
+
+                        /* Set the response */
+                        JSONValue response;
+                        response["mail"] = fetchedMail.getMessage();
+                        responseBlock["response"] = response;
                     }
                     else
                     {
