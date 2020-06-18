@@ -26,6 +26,11 @@ public final class ButterflyServer
     this(Address bindAddress)
     {
         /**
+        * Create the needed directories (if not already present)
+        */
+        directoryCheck();
+
+        /**
         * Instantiate a new Socket for the given Address
         * `bindAddress` of which it will bind to.
         */
@@ -40,6 +45,13 @@ public final class ButterflyServer
 
         /* TODO: Set this to the correct value */
         domain = "poes";
+    }
+
+    private void directoryCheck()
+    {
+        /* TODO: Create the `mailboxes/` directory, if it does not exist */
+        
+        
     }
 
     private void run()
