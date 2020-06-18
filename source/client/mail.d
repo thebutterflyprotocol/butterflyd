@@ -72,9 +72,18 @@ public final class Mailbox
         /* TODO: Generate unique ID for mail */
     }
 
-    public void deleteMail()
+    public void deleteMailbox()
     {
+        /* TODO: Run deletion on all folders */
+        Folder[] folders = getFolders();
 
+        foreach(Folder folder; folders)
+        {
+            /* Delete the folder */
+            folder.deleteFolder();
+        }
+
+        /* TODO: Delete the mailbox directory */
     }
 }
 
