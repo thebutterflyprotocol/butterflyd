@@ -60,6 +60,7 @@ public final class ButterflyClient : Thread
 
         /* The JSON response to be sent */
         JSONValue responseBlock;
+        long status = 0;
 
         /* TODO: Implement loop read-write here */
         while(active)
@@ -241,6 +242,9 @@ public final class ButterflyClient : Thread
             }
 
             /* TODO: Write response here */
+            
+            /* Generate the `status` field */
+            responseBlock["status"] = status;
 
             /* Write the response block to the client */
             writeln("Writing back response: "~responseBlock.toPrettyString());
