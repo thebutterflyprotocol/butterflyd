@@ -136,6 +136,12 @@ public final class ButterflyClient : Thread
                     if(connectionType == ClientType.CLIENT)
                     {
                         /* TODO: Implement me */
+
+                        /* Get the mail block */
+                        JSONValue mailBlock = commandBlock["request"]["mail"];
+
+                        /* Send the mail message */
+                        sendMail(mailBlock);
                     }
                     else
                     {
@@ -469,6 +475,7 @@ public final class ButterflyClient : Thread
                 Socket remoteServer = new Socket(AddressFamily.INET, SocketType.STREAM, ProtocolType.TCP);
                 remoteServer.connect(parseAddress(domain, 6969));
                 sendMessage(remoteServer, cast(byte[])toJSON(messageBlock));
+                remoteServer.close();
                 writeln("Message delivered to server "~domain);
             }
 
