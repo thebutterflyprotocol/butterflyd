@@ -200,7 +200,7 @@ public final class Folder
     /**
     * Create a new Folder
     */
-    public Folder createChildFolder(string folderName)
+    public Folder createFolder(string folderName)
     {
         Folder newFolder;
 
