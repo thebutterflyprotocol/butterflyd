@@ -130,21 +130,14 @@ public final class Folder
     */
     this(Mailbox mailbox, string folderPath)
     {
+        /* Ensure that the folder exists */
+        if(!(exists("mailboxes/"~mailbox.username~"/"~folderPath) && isDir("mailboxes/"~mailbox.username~"/"~folderPath)))
+        {
+            /* TODO: Throw exception */
+        }
+
         this.folderPath = folderPath;
         this.mailbox = mailbox;
-
-        /* TODO: Add parent discovery and shit */
-
-        /* TODO: Recursively travel up the tree and generate the fodlerPath */
-        generateFolderPath();
-
-        /* Generate the directory structure */
-        initDirectoryStructure();
-    }
-
-    private void initDirectoryStructure()
-    {
-        /* TODO: Setup the tree goign from here to top */
     }
 
     /**
