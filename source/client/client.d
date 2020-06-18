@@ -125,10 +125,14 @@ public final class ButterflyClient : Thread
                     /* Make sure the connection is from a client */
                     if(connectionType == ClientType.CLIENT)
                     {
-                        /* TODO: Implement me */
-                        Mail mail = new Mail(commandBlock["mail"]);
-                        //Folder storeFolder = new Folder(mailbox)
-                        //mailbox.storeMessage()
+                        /* Get the mail block */
+                        JSONValue mailBlock = commandBlock["request"]["mail"];
+
+                        /* Get the folder to store the mail message in */
+                        Folder storeFolder = new Folder(mailbox, commandBlock["request"]["folder"].str());
+                       
+                        /* Store the message in the mailbox */
+                        storeMail(storeMail, mailBlock);
                     }
                     else
                     {
@@ -256,6 +260,18 @@ public final class ButterflyClient : Thread
 
         /* Close the socket */
         clientSocket.close();
+    }
+
+    /**
+    * Stores a mail message in the users Mailbox
+    * at in the given Folder, `folder`.
+    */
+    private Mail storeMail(Folder folder, JSONValue mailBlock)
+    {
+        /* Create the Mail message to store it */
+        Mail savedMail = Mail.createMail(mailbox, folder, mailBlock);
+
+        return savedMail;
     }
 
     private bool authenticate(string username, string password)

@@ -74,7 +74,7 @@ public final class Mailbox
         return newFolder;
     }
 
-    public void storeMessage(Folder folder, Mail message)
+    public void storeMessage(Folder folder, string mailID, JSONValue mailBlock)
     {
         /* TODO: Traverse the folder path */
         string kaka;
@@ -153,8 +153,7 @@ public final class Folder
             /* Only append files */
             if(dirEntry.isFile())
             {
-                messages ~= new Mail()
-                folders ~= new Folder(mailbox, folderPath~"/"~dirEntry.name());
+                messages ~= new Mail(mailbox, this, dirEntry.name());
             }
         }
 
@@ -230,26 +229,41 @@ public final class Folder
 public final class Mail
 {
 
-    private JSONValue messageBlock;
-
-    /* TODO (think about): Before id of mail (for creating) and also for existing */
-    private string[] recipients;
+   /**
+   * The associated Mailbox
+   */
 
     private string id;
 
-    public static Mail createMail(Mailbox mailbox, JSONValue mailBlock)
+    public static Mail createMail(Mailbox mailbox, Folder folder, JSONValue mailBlock)
     {
         Mail newMail;
 
-        /* TODO: Store to disk in mailstore */
-        //mailbox.getIDFor(mailBlock);
+        /* Generate a unique mailID of this message */
+        string mailID = getNameForMail(mailBlock);
+
+        /* Save the mail into the mailbox */
+        mailbox.storeMessage(folder, mailID, mailBlock);
+
+        /* fetch the mail object */
+        newMail = new Mail(mailbox, folder, mailID);
 
         /* TODO: Re think our system */
         return newMail;
     }
 
-    this(Folder folder, string id)
+    /**
+    * Returns a name unique to this message
+    */
+    private static string getNameForMail(JSONValue mailBlock)
     {
+        /* TODO: Hash message here and return hex of hash */
+        return "fhjdkshfjsdgfjk";
+    }
+
+    this(Mailbox mailbox, Folder folder, string id)
+    {
+
         this.id = id;
 
         /* TODO: Fetch mail here, or rather in a method */
