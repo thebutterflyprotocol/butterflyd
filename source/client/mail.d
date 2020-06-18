@@ -280,8 +280,14 @@ public final class Mail
     */
     private static string getNameForMail(JSONValue mailBlock)
     {
+        import std.digest.md;
+        MD5Digest digester = new MD5Digest();
+        
+        ubyte[] hash = digester.digest(cast(ubyte[])toJSON(mailBlock));
+
+
         /* TODO: Hash message here and return hex of hash */
-        return "fhjdkshfjsdgfjk";
+        return toHexString(hash);
     }
 
     this(Mailbox mailbox, Folder folder, string mailID)
