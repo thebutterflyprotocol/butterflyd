@@ -181,6 +181,8 @@ public final class Folder
 
         /* TODO: Create here */
 
+        mkdir("mailboxes/"~mailbox.username~"/"~folderPath~"/"~folderName);
+
         newFolder = new Folder(mailbox, this, folderName);
 
 
