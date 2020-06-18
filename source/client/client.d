@@ -71,7 +71,8 @@ public final class ButterflyClient : Thread
 
             /* Await a message from the client */
             bool recvStatus = receiveMessage(clientSocket, receivedBytes);
-            
+            writeln(recvStatus);
+
             if(recvStatus)
             {
                 /* TODO: Add error handling catch for all JSON here */
@@ -265,6 +266,7 @@ public final class ButterflyClient : Thread
             /* Write the response block to the client */
             writeln("Writing back response: "~responseBlock.toPrettyString());
             bool sendStatus = sendMessage(clientSocket, cast(byte[])toJSON(responseBlock));
+            writeln(sendStatus);
 
             /* If there was an error writing the response back */
             if(!sendStatus)
