@@ -13,15 +13,34 @@ import std.json;
 public final class Mailbox
 {
 
+    /**
+    * The owner of this Mailbox
+    */
+    private string username;
+
     public static Mailbox createMailbox(string username)
     {
+        Mailbox newMailbox;
+
         /* TODO: Implement me */
-        return new Mailbox("");
+
+        /* TODO: Create folder for mailbox as `mailboxes/<username>` */
+
+        newMailbox = new Mailbox(username);
+
+        /* TODO: Create the base set of folders */
+        newMailbox.addBaseFolder("Inbox");
+        newMailbox.addBaseFolder("Drafts");
+        newMailbox.addBaseFolder("Outbox");
+        newMailbox.addBaseFolder("Sent");
+        newMailbox.addBaseFolder("Trash");
+
+        return newMailbox;
     }
 
     this(string username)
     {
-        /* TODO: Implement fetching of mailbox-by-username here */
+        this.username = username;
     }
 
     public Folder[] getFolders()
@@ -35,12 +54,22 @@ public final class Mailbox
 
     public Folder addBaseFolder(string folderName)
     {
-        return null;
+        Folder newFolder;
+
+        /* TODO: Implement folder creation */
+
+        newFolder = new Folder(this, null, folderName);
+
+        return newFolder;
     }
 
     public void storeMessage(Folder folder, Mail message)
     {
+        /* TODO: Traverse the folder path */
 
+        /* TODO: Store the message */
+
+        /* TODO: Generate unique ID for mail */
     }
 
     public void deleteMail()
@@ -48,6 +77,8 @@ public final class Mailbox
 
     }
 }
+
+/* TODO: Rework the below to allow folder creation to be apart pf it */
 
 /**
 * Folder
@@ -121,9 +152,26 @@ public final class Folder
     */
     public Folder createChildFolder(string folderName)
     {
-        return null;
+        Folder newFolder;
+
+        /* TODO: Create here */
+
+        newFolder = new Folder(mailbox, this, folderName);
+
+
+        return newFolder;
     }
 
+    public string getPath()
+    {
+        /* TODO: Build path gpijg upwards */
+        return "path";
+    }
+
+    override public string toString()
+    {
+        return getPath();
+    }
 
 }
 
@@ -139,6 +187,26 @@ public final class Mail
 
     /* TODO (think about): Before id of mail (for creating) and also for existing */
     private string[] recipients;
+
+    private string id;
+
+    public static Mail createMail(Mailbox mailbox, JSONValue mailBlock)
+    {
+        Mail newMail;
+
+        /* TODO: Store to disk in mailstore */
+        mailbox.getIDFor(mailBlock);
+
+        /* TODO: Re think our system */
+        return newMail;
+    }
+
+    this(string id)
+    {
+        this.id = id;
+
+        /* TODO: Fetch mail here, or rather in a method */
+    }
 
     this(JSONValue mailBlock)
     {
