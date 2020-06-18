@@ -15,7 +15,7 @@ JSON sent:
 
 ```json
 {
-	"command" : "auth",
+	"command" : "authenticate",
 	"request" : {
 		"username" : "<username>",
 		"password" : "<password>"

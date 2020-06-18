@@ -82,7 +82,7 @@ public final class ButterflyClient : Thread
                 string command = commandBlock["command"].str();
 
                 /* TODO: Add command handling here */
-                if(cmp(command, "auth") == 0)
+                if(cmp(command, "authenticate") == 0)
                 {
                     /* Get the username and password */
                     string authUsername = commandBlock["request"]["username"].str(); 
