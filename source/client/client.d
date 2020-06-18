@@ -126,6 +126,9 @@ public final class ButterflyClient : Thread
                     if(connectionType == ClientType.CLIENT)
                     {
                         /* TODO: Implement me */
+                        Mail mail = new Mail(commandBlock["mail"]);
+                        //Folder storeFolder = new Folder(mailbox)
+                        //mailbox.storeMessage()
                     }
                     else
                     {

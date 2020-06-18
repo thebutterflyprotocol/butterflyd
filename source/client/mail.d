@@ -112,27 +112,39 @@ public final class Folder
     private Folder parentFolder;
 
     /**
-    * The name of this folder
+    * The path of this folder
     */
-    private string folderName;
+    private string folderPath;
 
     /**
     * The associated Mailbox
     */
     private Mailbox mailbox;
 
-    private string folderPath;
-
-    this(Mailbox mailbox, Folder parentFolder, string folderName)
+    /**
+    * Constructs a new Folder object which represents an
+    * existing folder in a user's Mailbox.
+    *
+    * The Mailbox is specified by `mailbox` and the location
+    * of the folder within the mailbox by `folderPath`.
+    */
+    this(Mailbox mailbox, string folderPath)
     {
-        this.parentFolder = parentFolder;
-        this.folderName = folderName;
+        this.folderPath = folderPath;
         this.mailbox = mailbox;
 
         /* TODO: Add parent discovery and shit */
 
         /* TODO: Recursively travel up the tree and generate the fodlerPath */
         generateFolderPath();
+
+        /* Generate the directory structure */
+        initDirectoryStructure();
+    }
+
+    private void initDirectoryStructure()
+    {
+        /* TODO: Setup the tree goign from here to top */
     }
 
     /**
