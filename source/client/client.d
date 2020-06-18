@@ -75,6 +75,7 @@ public final class ButterflyClient : Thread
 
                 /* Parse the incoming JSON */
                 commandBlock = parseJSON(cast(string)receivedBytes);
+                writeln("Received response: "~commandBlock.toPrettyString());
 
                 /* Get the command */
                 string command = commandBlock["command"].str();
@@ -236,6 +237,7 @@ public final class ButterflyClient : Thread
             /* TODO: Write response here */
 
             /* Write the response block to the client */
+            writeln("Writing back response: "~responseBlock.toPrettyString());
             bool sendStatus = sendMessage(clientSocket, cast(byte[])toJSON(responseBlock));
 
             /* If there was an error writing the response back */
@@ -243,8 +245,11 @@ public final class ButterflyClient : Thread
             {
                 /* End the session */
                 active = false;
+                writeln("Response write back failed");
             }
         }
+
+        writeln("Closing session...");
 
         /* Close the socket */
         clientSocket.close();
