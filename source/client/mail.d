@@ -69,7 +69,7 @@ public final class Mailbox
 
         mkdir("mailboxes/"~username~"/"~folderName);
 
-        newFolder = new Folder(this, null, folderName);
+        // newFolder = new Folder(this, null, folderName);
 
         return newFolder;
     }
@@ -161,9 +161,13 @@ public final class Folder
 
         /* TODO: Implement me */
 
-        foreach(string directory; dirEntries(folderPath, SpanMode.shallow))
+        foreach(DirEntry directory; dirEntries(folderPath, SpanMode.shallow))
         {
-            folders ~= new Folder(mailbox, this, directory);
+            /* Only append fodlers */
+            if(directory.isDir())
+            {
+                folders ~= new Folder(mailbox, directory.name());
+            }
         }
         
         return folders;
@@ -191,7 +195,7 @@ public final class Folder
 
         mkdir("mailboxes/"~mailbox.username~"/"~folderPath~"/"~folderName);
 
-        newFolder = new Folder(mailbox, this, folderName);
+        // newFolder = new Folder(mailbox, this, folderName);
 
 
         return newFolder;

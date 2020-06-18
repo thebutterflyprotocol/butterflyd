@@ -325,10 +325,10 @@ public final class ButterflyClient : Thread
                 Mailbox userMailbox = new Mailbox(username);
 
                 /* Get the Inbox folder */
-                Folder inboxFolder = new Folder(userMailbox, null, "Inbox");
+                // Folder inboxFolder = new Folder(userMailbox, null, "Inbox");
 
                 /* Store the message in their Inbox folder */
-                userMailbox.storeMessage(inboxFolder, mail);
+                // userMailbox.storeMessage(inboxFolder, mail);
 
                 writeln("Stored mail message");
             }
@@ -368,10 +368,10 @@ public final class ButterflyClient : Thread
                 Mailbox userMailbox = new Mailbox(username);
 
                 /* Get the Inbox folder */
-                Folder inboxFolder = new Folder(userMailbox, null, "Inbox");
+                // Folder inboxFolder = new Folder(userMailbox, null, "Inbox");
 
                 /* Store the message in their Inbox folder */
-                userMailbox.storeMessage(inboxFolder, mail);
+                // userMailbox.storeMessage(inboxFolder, mail);
             }
             else
             {
