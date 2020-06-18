@@ -58,6 +58,9 @@ public final class ButterflyClient : Thread
         /* The received bytes */
         byte[] receivedBytes;
 
+        /* The JSON response to be sent */
+        JSONValue responseBlock;
+
         /* TODO: Implement loop read-write here */
         while(active)
         {
@@ -215,6 +218,10 @@ public final class ButterflyClient : Thread
                         /* TODO: Add error handling */
                     }
                 }
+                else if(cmp(command, "totsiens") == 0)
+                {
+                    active = false;
+                }
                 else
                 {
                     /* TODO: Add error handling for invalid commands */
@@ -224,6 +231,8 @@ public final class ButterflyClient : Thread
             {
                 /* TODO: Add error handling here */
             }
+
+            /* TODO: Write response here */
         }
 
         /* Close the socket */
