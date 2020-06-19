@@ -369,20 +369,17 @@ public final class ButterflyClient : Thread
     */
     private Folder createFolder(string folderName)
     {
+        /* Strip infront or behind slashes */
+        folderName = strip(folderName, "/");
+
         /* Seperated paths */
         string[] seperatedPaths = split(folderName, "/");
 
         /* The newly created Folder */
         Folder newFolder;
 
-        /**
-        * Check if we are creating a base folder
-        * or a nested folder.
-        */
-        bool isBaseFolder = seperatedPaths.length <= 1;
-
         /* If it is a base folder wanting to be created */
-        if(isBaseFolder)
+        if(seperatedPaths.length)
         {
             newFolder = mailbox.addBaseFolder(folderName);
         }

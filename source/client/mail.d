@@ -237,7 +237,7 @@ public final class Folder
     {
         string[] paths = split(folderPath, "/");
         string folderName = paths[paths.length-1];
-        return folderName;
+        return "\""~folderName~"\"";
     }
 }
 
