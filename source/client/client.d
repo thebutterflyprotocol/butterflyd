@@ -176,7 +176,7 @@ public final class ButterflyClient : Thread
                     /* Make sure the connection is from a server */
                     if(connectionType == ClientType.SERVER)
                     {
-                        /* TODO: Implement me */
+                        /* Deliver the mail message from the remote host */
                         deliverMail(commandBlock["request"]["mail"]);
                     }
                     else
@@ -189,8 +189,6 @@ public final class ButterflyClient : Thread
                     /* Make sure the connection is from a client */
                     if(connectionType == ClientType.CLIENT)
                     {
-                        /* TODO: Implement me */
-
                         /* The folder where the mail message is stored */
                         Folder fetchFolder = new Folder(mailbox, commandBlock["request"]["folder"].str());
 
@@ -371,6 +369,9 @@ public final class ButterflyClient : Thread
     */
     private Folder createFolder(string folderName)
     {
+        /* Seperated paths */
+        string[] seperatedPaths = split(folderName, "/");
+
         /* The newly created Folder */
         Folder newFolder;
 
@@ -378,7 +379,7 @@ public final class ButterflyClient : Thread
         * Check if we are creating a base folder
         * or a nested folder.
         */
-        bool isBaseFolder = true; /* TODO: Logic work out */
+        bool isBaseFolder = seperatedPaths.length <= 1;
 
         /* If it is a base folder wanting to be created */
         if(isBaseFolder)
@@ -388,7 +389,9 @@ public final class ButterflyClient : Thread
         /* If it is a nested folder wanting to be created */
         else
         {
-            //newFolder = ;
+            string folderPathExisting = folderName[0..lastIndexOf(folderName, "/")];
+            Folder endDirectoryExisting = new Folder(mailbox, folderPathExisting);
+            newFolder = endDirectoryExisting.createFolder(folderName[lastIndexOf(folderName, "/")+1..folderName.length]);
         }
 
         return newFolder;
