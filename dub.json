@@ -4,7 +4,7 @@
 	],
 	"copyright": "Copyright © 2020, Tristan B. Kildaire",
 	"dependencies": {
-		"bformat": "~>1.0.7"
+		"bformat": "1.0.8"
 	},
 	"description": "Butterfly mail daemon",
 	"license": "AGPL v3",
