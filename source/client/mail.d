@@ -335,4 +335,9 @@ public final class Mail
         
         return messageBlock;
     }
+
+    override public string toString()
+    {
+        return "\""~mailID~"\"";
+    }
 }

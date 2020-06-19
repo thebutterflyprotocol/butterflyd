@@ -237,7 +237,7 @@ JSON sent:
 
 ```json
 {
-	"command" : "listFolder",
+	"command" : "listMail",
 	"request" : {
 		"folderName" : "<folderName>"
 	}

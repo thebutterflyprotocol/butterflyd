@@ -8,6 +8,7 @@ import std.json;
 import std.string;
 import client.mail;
 import server.server;
+import std.conv : to;
 
 public final class ButterflyClient : Thread
 {
@@ -255,18 +256,37 @@ public final class ButterflyClient : Thread
                         /* TODO: Add error handling */
                     }
                 }
-                else if(cmp(command, "listFolder") == 0)
+                else if(cmp(command, "listMail") == 0)
                 {
                     /* Make sure the connection is from a client */
                     if(connectionType == ClientType.CLIENT)
                     {
-                        /* TODO: Implement me */
+                        /* Get the folder wanting to be listed */
+                        Folder listFolder = new Folder(mailbox, commandBlock["request"]["folderName"].str());
+
+                        responseBlock["mailIDs"] = to!(string)(listFolder.getMessages());
                     }
                     else
                     {
                         /* TODO: Add error handling */
                     }
                 }
+                else if(cmp(command, "listFolder") == 0)
+                {
+                    /* Make sure the connection is from a client */
+                    if(connectionType == ClientType.CLIENT)
+                    {
+                        /* Get the folder wanting to be listed */
+                        Folder listFolder = new Folder(mailbox, commandBlock["request"]["folderName"].str());
+
+                        //responseBlock["folders"] = to!(string)(listFolder.getMessages());
+                    }
+                    else
+                    {
+                        /* TODO: Add error handling */
+                    }
+                }
+                
                 else if(cmp(command, "totsiens") == 0)
                 {
                     /* Close the connection on next loop condition check */
