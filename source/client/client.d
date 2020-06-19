@@ -496,6 +496,9 @@ public final class ButterflyClient : Thread
                         goto deliveryFailed;
                     }
 
+                    /* Close the connection with the remote host */
+                    remoteServer.close();
+
                     JSONValue responseBlock = parseJSON(cast(string)receivedBytes);
 
                     /* TODO: Get status code here an act on it */
@@ -506,10 +509,7 @@ public final class ButterflyClient : Thread
                     else
                     {
                         goto deliveryFailed;
-                    }
-
-                    /* Close the connection with the remote host */
-                    remoteServer.close();
+                    }                    
                 }
                 catch(SocketOSException)
                 {
@@ -519,16 +519,21 @@ public final class ButterflyClient : Thread
                 {
                     deliveryFailed:
                         writeln("Error delivering to server "~domain);
+                        continue;
                 }
             }
 
             writeln("Sent mail message");
         }
 
+        writeln("Mail delivered");
+
         /* Store the message in this user's "Sent" folder */
         Folder sentFolder = new Folder(mailbox, "Sent");
 
         /* Store the message in their Inbox folder */
         Mail.createMail(mailbox, sentFolder, mailBlock);
+
+        writeln("Saved mail message to sent folder");
     }
 }
