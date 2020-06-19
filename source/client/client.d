@@ -513,9 +513,13 @@ public final class ButterflyClient : Thread
                 }
                 catch(SocketOSException)
                 {
+                    goto deliveryFailed;
+                }     
+                catch(JSONException)
+                {
                     deliveryFailed:
                         writeln("Error delivering to server "~domain);
-                }                
+                }
             }
 
             writeln("Sent mail message");
