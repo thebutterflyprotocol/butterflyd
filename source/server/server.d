@@ -24,7 +24,7 @@ public final class ButterflyServer
     /* TODO: Server domain */
     public string domain;
 
-    this(Address bindAddress)
+    this(Address bindAddress, string domain)
     {
         /**
         * Create the needed directories (if not already present)
@@ -38,8 +38,8 @@ public final class ButterflyServer
         serverSocket = new Socket(bindAddress.addressFamily, SocketType.STREAM, ProtocolType.TCP);
         serverSocket.bind(bindAddress);
 
-        /* TODO: Set this to the correct value */
-        domain = "poes";
+        /* Set the domain of the server */
+        this.domain = domain;
 
         /* Start accepting connections */
         run();

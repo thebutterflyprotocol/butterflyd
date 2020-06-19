@@ -9,5 +9,5 @@ void main()
 
 	/* Start the server */
 	Address address = parseAddress("0.0.0.0", 6969);
-	ButterflyServer server = new ButterflyServer(address);
+	ButterflyServer server = new ButterflyServer(address, "poes");
 }
