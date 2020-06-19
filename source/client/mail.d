@@ -3,6 +3,7 @@ module client.mail;
 import std.json;
 import std.file;
 import std.stdio;
+import std.string;
 
 /* TODO: Ref counter garbage collector for mail */
 
@@ -169,15 +170,18 @@ public final class Folder
         Mail[] messages;
 
         /* Get a list of all the files within this directory */
-        foreach(DirEntry dirEntry; dirEntries(folderPath, SpanMode.shallow))
+        foreach(DirEntry dirEntry; dirEntries("mailboxes/"~mailbox.username~"/"~folderPath, SpanMode.shallow))
         {
             /* Only append files */
             if(dirEntry.isFile())
             {
-                messages ~= new Mail(mailbox, this, dirEntry.name());
+                string[] paths = split(dirEntry.name(), "/");
+                string mailID = paths[paths.length-1];
+                messages ~= new Mail(mailbox, this, mailID);
             }
         }
 
+        writeln("fhjdf");
         return messages;
     }
 
@@ -189,7 +193,7 @@ public final class Folder
         Folder[] folders;
 
         /* Get a list of all the directories within this directory */
-        foreach(DirEntry dirEntry; dirEntries(folderPath, SpanMode.shallow))
+        foreach(DirEntry dirEntry; dirEntries("mailboxes/"~mailbox.username~"/"~folderPath, SpanMode.shallow))
         {
             /* Only append folders */
             if(dirEntry.isDir())
@@ -231,7 +235,9 @@ public final class Folder
 
     override public string toString()
     {
-        return folderPath;
+        string[] paths = split(folderPath, "/");
+        string folderName = paths[paths.length-1];
+        return folderName;
     }
 }
 

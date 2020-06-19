@@ -77,6 +77,9 @@ public final class ButterflyClient : Thread
             bool recvStatus = receiveMessage(clientSocket, receivedBytes);
             writeln(recvStatus);
 
+            /* Reset the response JSON */
+            responseBlock = JSONValue();
+
             if(recvStatus)
             {
                 /* TODO: Add error handling catch for all JSON here */
@@ -264,7 +267,8 @@ public final class ButterflyClient : Thread
                         /* Get the folder wanting to be listed */
                         Folder listFolder = new Folder(mailbox, commandBlock["request"]["folderName"].str());
 
-                        responseBlock["mailIDs"] = to!(string)(listFolder.getMessages());
+                        /* Write back an array of mailIDs */
+                        responseBlock["mailIDs"] = parseJSON(to!(string)(listFolder.getMessages()));
                     }
                     else
                     {
@@ -279,7 +283,8 @@ public final class ButterflyClient : Thread
                         /* Get the folder wanting to be listed */
                         Folder listFolder = new Folder(mailbox, commandBlock["request"]["folderName"].str());
 
-                        //responseBlock["folders"] = to!(string)(listFolder.getMessages());
+                        /* Write back an array of folder names */
+                        responseBlock["folders"] = parseJSON(to!(string)(listFolder.getFolders()));
                     }
                     else
                     {
