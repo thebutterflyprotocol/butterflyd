@@ -1,7 +1,7 @@
 module client.client;
 
 import core.thread : Thread;
-import std.socket : Socket;
+import std.socket : Socket, AddressFamily, SocketType, ProtocolType, parseAddress, Address, SocketOSException;
 import bmessage;
 import std.stdio;
 import std.json;
@@ -475,15 +475,47 @@ public final class ButterflyClient : Thread
                 requestBlock["mail"] = mailBlock;
                 messageBlock["request"] = requestBlock;
 
-                import std.socket : AddressFamily, SocketType, ProtocolType, parseAddress, Address;
-
                 /* Deliver the mail to the remote server */
                 Socket remoteServer = new Socket(AddressFamily.INET, SocketType.STREAM, ProtocolType.TCP);
                 
-                remoteServer.connect(parseAddress(domain, 6969));
-                sendMessage(remoteServer, cast(byte[])toJSON(messageBlock));
-                remoteServer.close();
-                writeln("Message delivered to server "~domain);
+                try
+                {
+                    remoteServer.connect(parseAddress(domain, 6969));
+                    bool sendStatus = sendMessage(remoteServer, cast(byte[])toJSON(messageBlock));
+
+                    if(!sendStatus)
+                    {
+                        goto deliveryFailed;
+                    }
+
+                    byte[] receivedBytes;
+                    bool recvStatus = receiveMessage(clientSocket, receivedBytes);
+
+                    if(!recvStatus)
+                    {
+                        goto deliveryFailed;
+                    }
+
+                    JSONValue responseBlock = parseJSON(cast(string)receivedBytes);
+
+                    /* TODO: Get status code here an act on it */
+                    if(responseBlock["status"].integer() == 0)
+                    {
+                        writeln("Message delivered to server "~domain);
+                    }
+                    else
+                    {
+                        goto deliveryFailed;
+                    }
+
+                    /* Close the connection with the remote host */
+                    remoteServer.close();
+                }
+                catch(SocketOSException)
+                {
+                    deliveryFailed:
+                        writeln("Error delivering to server "~domain);
+                }                
             }
 
             writeln("Sent mail message");
