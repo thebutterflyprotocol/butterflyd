@@ -10,6 +10,7 @@ import client.mail;
 import server.server;
 import std.conv : to;
 import client.exceptions;
+import std.file;
 
 public final class ButterflyClient : Thread
 {
@@ -63,6 +64,7 @@ public final class ButterflyClient : Thread
         /* The JSON response to be sent */
         JSONValue responseBlock;
         long status = 0;
+        string message;
 
         /**
         * TODO: My error handling in bformat is not good.
@@ -83,6 +85,8 @@ public final class ButterflyClient : Thread
             {
                 /* Reset the response JSON */
                 responseBlock = JSONValue();
+                message.length = 0;
+                status = 0;
 
                 /* TODO: Add error handling catch for all JSON here */
 
@@ -130,13 +134,8 @@ public final class ButterflyClient : Thread
                         string regUsername = commandBlock["request"]["username"].str(); 
                         string regPassword = commandBlock["request"]["password"].str();
 
-                        /* TODO: Implement registration */
-                        bool regStatus = register(regUsername, regPassword);
-
-                        if(!regStatus)
-                        {
-                            /* TODO: Implement error handling for failed registration */
-                        }
+                        /* Attempt to register the new account */
+                        register(regUsername, regPassword);
                     }
                     else if(cmp(command, "sendMail") == 0)
                     {
@@ -308,14 +307,24 @@ public final class ButterflyClient : Thread
                     /* TODO: Set error message and status code */
                     //status = e.
                 }
+                catch(FileException e)
+                {
+                    /* Status=-1 :: I/O error */
+                    status = -1;
+                }
                 catch(ButterflyException e)
                 {
-                    /* TODO: Set error message and status code */
-                    //status = e.
+                    /* Set the status */
+                    status = e.status;
                 }
 
-                /* Generate the `status` field */
-                responseBlock["status"] = status;
+                /* Generate the `status` block */
+                JSONValue statusBlock;
+                statusBlock["code"] = status;
+                statusBlock["message"] = message;
+
+                /* Set the `status` field of the response block */
+                responseBlock["status"] = statusBlock;
 
                 /* Write the response block to the client */
                 writeln("Writing back response: "~responseBlock.toPrettyString());
@@ -326,18 +335,16 @@ public final class ButterflyClient : Thread
                 if(!sendStatus)
                 {
                     /* End the session */
-                    active = false;
                     writeln("Response write back failed");
+                    break;
                 }
             }
             else
             {
-                /* TODO: Add error handling here */
-
                 /**
                 * If we failed to receive, then close the connection
                 */
-                active = false;
+                break;
             }
         }
 
@@ -366,27 +373,23 @@ public final class ButterflyClient : Thread
         return true;
     }
 
-    private bool register(string username, string password)
+    private void register(string username, string password)
     {
-        /* TODO Implement me */
-
-        import std.file;
-
-        /* Check if the account exists */
+        /**
+        * Check if the account already exists.
+        * If it does then throw an exception.
+        */
         if(exists("accounts/"~username))
         {
-            /* TODO: Add exception throwing here */
+            /* Status=1 :: Account exists */
+            throw new ButterflyException(1);
         }
 
-        /* Return false in the case that registration fails */
-        if(Mailbox.isMailbox(username))
-        {
-            return false;
-        }
-
+        /* Create the mailbox for the new user */
         Mailbox.createMailbox(username);
 
-        return true;
+        /* Create the account */
+        /* TODO: Implement me */
     }
 
     /**
