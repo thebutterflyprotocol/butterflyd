@@ -52,7 +52,7 @@ public final class ButterflyServer
     {
         /* TODO: Create the `mailboxes/` directory, if it does not exist */
 
-        /* Check to make sure there is a fs node at `mailboxes` */
+        /* Check to make sure there is n FS node at `mailboxes` */
         if(exists("mailboxes"))
         {
             /* Make sure it is a directory */
@@ -69,7 +69,26 @@ public final class ButterflyServer
         {
             /* Create the `mailboxes` directory */
             mkdir("mailboxes");
-        }   
+        }  
+
+        /* Check to make sure there is an FS node at `accounts/` */
+        if(exists("accounts"))
+        {
+            /* Make sure it is a directory */
+            if(isDir("accounts"))
+            {
+
+            }
+            else
+            {
+                /* TODO: Error handling */
+            }
+        }
+        else
+        {
+            /* Create the `accounts` directory */
+            mkdir("accounts");
+        }  
     }
 
     private void run()

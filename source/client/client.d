@@ -353,6 +353,14 @@ public final class ButterflyClient : Thread
     {
         /* TODO Implement me */
 
+        import std.file;
+
+        /* Check if the account exists */
+        if(exists("accounts/"~username))
+        {
+            /* TODO: Add exception throwing here */
+        }
+
         /* Return false in the case that registration fails */
         if(Mailbox.isMailbox(username))
         {
