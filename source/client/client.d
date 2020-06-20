@@ -9,6 +9,7 @@ import std.string;
 import client.mail;
 import server.server;
 import std.conv : to;
+import client.exceptions;
 
 public final class ButterflyClient : Thread
 {
@@ -85,221 +86,233 @@ public final class ButterflyClient : Thread
 
                 /* TODO: Add error handling catch for all JSON here */
 
-                /* Parse the incoming JSON */
-                commandBlock = parseJSON(cast(string)receivedBytes);
-                writeln("Received response: "~commandBlock.toPrettyString());
-
-                /* Get the command */
-                string command = commandBlock["command"].str();
-
-                /* TODO: Add command handling here */
-                if(cmp(command, "authenticate") == 0)
+                try
                 {
-                    /* Get the username and password */
-                    string authUsername = commandBlock["request"]["username"].str(); 
-                    string authPassword = commandBlock["request"]["password"].str();
+                    /* Parse the incoming JSON */
+                    commandBlock = parseJSON(cast(string)receivedBytes);
+                    writeln("Received response: "~commandBlock.toPrettyString());
 
-                    /* TODO: Implement authentication */
-                    bool authStatus = authenticate(authUsername, authPassword);
+                    /* Get the command */
+                    string command = commandBlock["command"].str();
 
-                    if(authStatus)
+                    /* TODO: Add command handling here */
+                    if(cmp(command, "authenticate") == 0)
                     {
-                        /**
-                        * If the auth if successful then upgrade to
-                        * a client-type connection.
-                        */
-                        connectionType = ClientType.CLIENT;   
+                        /* Get the username and password */
+                        string authUsername = commandBlock["request"]["username"].str(); 
+                        string authPassword = commandBlock["request"]["password"].str();
 
-                        /**
-                        * Set the user's associated Mailbox up
-                        */
-                        mailbox = new Mailbox(authUsername);
+                        /* TODO: Implement authentication */
+                        bool authStatus = authenticate(authUsername, authPassword);
+
+                        if(authStatus)
+                        {
+                            /**
+                            * If the auth if successful then upgrade to
+                            * a client-type connection.
+                            */
+                            connectionType = ClientType.CLIENT;   
+
+                            /**
+                            * Set the user's associated Mailbox up
+                            */
+                            mailbox = new Mailbox(authUsername);
+                        }
+                        else
+                        {
+                            /* TODO: Error handling for authentication failure */
+                        }
+                    }
+                    /* TODO: Add command handling here */
+                    else if(cmp(command, "register") == 0)
+                    {
+                        /* Get the username and password */
+                        string regUsername = commandBlock["request"]["username"].str(); 
+                        string regPassword = commandBlock["request"]["password"].str();
+
+                        /* TODO: Implement registration */
+                        bool regStatus = register(regUsername, regPassword);
+
+                        if(!regStatus)
+                        {
+                            /* TODO: Implement error handling for failed registration */
+                        }
+                    }
+                    else if(cmp(command, "sendMail") == 0)
+                    {
+                        /* Make sure the connection is from a client */
+                        if(connectionType == ClientType.CLIENT)
+                        {
+                            /* TODO: Implement me */
+
+                            /* Get the mail block */
+                            JSONValue mailBlock = commandBlock["request"]["mail"];
+
+                            /* Send the mail message */
+                            sendMail(mailBlock);
+                        }
+                        else
+                        {
+                            /* TODO: Add error handling */
+                        }
+                    }
+                    else if(cmp(command, "storeMail") == 0)
+                    {
+                        /* Make sure the connection is from a client */
+                        if(connectionType == ClientType.CLIENT)
+                        {
+                            /* Get the mail block */
+                            JSONValue mailBlock = commandBlock["request"]["mail"];
+
+                            /* Get the folder to store the mail message in */
+                            Folder storeFolder = new Folder(mailbox, commandBlock["request"]["folder"].str());
+                        
+                            /* Store the message in the mailbox */
+                            storeMail(storeFolder, mailBlock);
+                        }
+                        else
+                        {
+                            /* TODO: Add error handling */
+                        }
+                    }
+                    else if(cmp(command, "deliverMail") == 0)
+                    {
+                        /* Make sure the connection is from a server */
+                        if(connectionType == ClientType.SERVER)
+                        {
+                            /* Deliver the mail message from the remote host */
+                            deliverMail(commandBlock["request"]["mail"]);
+                        }
+                        else
+                        {
+                            /* TODO: Add error handling */
+                        }
+                    }
+                    else if(cmp(command, "fetchMail") == 0)
+                    {
+                        /* Make sure the connection is from a client */
+                        if(connectionType == ClientType.CLIENT)
+                        {
+                            /* The folder where the mail message is stored */
+                            Folder fetchFolder = new Folder(mailbox, commandBlock["request"]["folder"].str());
+
+                            /* The mail ID of the mail message */
+                            string mailID = commandBlock["request"]["id"].str();
+
+                            /* Fetch the Mail */
+                            Mail fetchedMail = new Mail(mailbox, fetchFolder, mailID);
+
+                            /* Set the response */
+                            JSONValue response;
+                            response["mail"] = fetchedMail.getMessage();
+                            responseBlock["response"] = response;
+                        }
+                        else
+                        {
+                            /* TODO: Add error handling */
+                        }
+                    }
+                    else if(cmp(command, "createFolder") == 0)
+                    {
+                        /* Make sure the connection is from a client */
+                        if(connectionType == ClientType.CLIENT)
+                        {
+                            /* TODO: Implement me */
+                            createFolder(commandBlock["request"]["folderName"].str());
+                        }
+                        else
+                        {
+                            /* TODO: Add error handling */
+                        }
+                    }
+                    else if(cmp(command, "deleteFolder") == 0)
+                    {
+                        /* Make sure the connection is from a client */
+                        if(connectionType == ClientType.CLIENT)
+                        {
+                            /* TODO: Implement me */
+                        }
+                        else
+                        {
+                            /* TODO: Add error handling */
+                        }
+                    }
+                    else if(cmp(command, "addToFolder") == 0)
+                    {
+                        /* Make sure the connection is from a client */
+                        if(connectionType == ClientType.CLIENT)
+                        {
+                            /* TODO: Implement me */
+                        }
+                        else
+                        {
+                            /* TODO: Add error handling */
+                        }
+                    }
+                    else if(cmp(command, "removeFromFolder") == 0)
+                    {
+                        /* Make sure the connection is from a client */
+                        if(connectionType == ClientType.CLIENT)
+                        {
+                            /* TODO: Implement me */
+                        }
+                        else
+                        {
+                            /* TODO: Add error handling */
+                        }
+                    }
+                    else if(cmp(command, "listMail") == 0)
+                    {
+                        /* Make sure the connection is from a client */
+                        if(connectionType == ClientType.CLIENT)
+                        {
+                            /* Get the folder wanting to be listed */
+                            Folder listFolder = new Folder(mailbox, commandBlock["request"]["folderName"].str());
+
+                            /* Write back an array of mailIDs */
+                            responseBlock["mailIDs"] = parseJSON(to!(string)(listFolder.getMessages()));
+                        }
+                        else
+                        {
+                            /* TODO: Add error handling */
+                        }
+                    }
+                    else if(cmp(command, "listFolder") == 0)
+                    {
+                        /* Make sure the connection is from a client */
+                        if(connectionType == ClientType.CLIENT)
+                        {
+                            /* Get the folder wanting to be listed */
+                            Folder listFolder = new Folder(mailbox, commandBlock["request"]["folderName"].str());
+
+                            /* Write back an array of folder names */
+                            responseBlock["folders"] = parseJSON(to!(string)(listFolder.getFolders()));
+                        }
+                        else
+                        {
+                            /* TODO: Add error handling */
+                        }
+                    }
+                    else if(cmp(command, "totsiens") == 0)
+                    {
+                        /* Close the connection on next loop condition check */
+                        active = false;
                     }
                     else
                     {
-                        /* TODO: Error handling for authentication failure */
+                        /* TODO: Add error handling for invalid commands */
                     }
                 }
-                /* TODO: Add command handling here */
-                else if(cmp(command, "register") == 0)
+                catch(JSONException e)
                 {
-                    /* Get the username and password */
-                    string regUsername = commandBlock["request"]["username"].str(); 
-                    string regPassword = commandBlock["request"]["password"].str();
-
-                    /* TODO: Implement registration */
-                    bool regStatus = register(regUsername, regPassword);
-
-                    if(!regStatus)
-                    {
-                        /* TODO: Implement error handling for failed registration */
-                    }
+                    /* TODO: Set error message and status code */
+                    //status = e.
                 }
-                else if(cmp(command, "sendMail") == 0)
+                catch(ButterflyException e)
                 {
-                    /* Make sure the connection is from a client */
-                    if(connectionType == ClientType.CLIENT)
-                    {
-                        /* TODO: Implement me */
-
-                        /* Get the mail block */
-                        JSONValue mailBlock = commandBlock["request"]["mail"];
-
-                        /* Send the mail message */
-                        sendMail(mailBlock);
-                    }
-                    else
-                    {
-                        /* TODO: Add error handling */
-                    }
+                    /* TODO: Set error message and status code */
+                    //status = e.
                 }
-                else if(cmp(command, "storeMail") == 0)
-                {
-                    /* Make sure the connection is from a client */
-                    if(connectionType == ClientType.CLIENT)
-                    {
-                        /* Get the mail block */
-                        JSONValue mailBlock = commandBlock["request"]["mail"];
-
-                        /* Get the folder to store the mail message in */
-                        Folder storeFolder = new Folder(mailbox, commandBlock["request"]["folder"].str());
-                       
-                        /* Store the message in the mailbox */
-                        storeMail(storeFolder, mailBlock);
-                    }
-                    else
-                    {
-                        /* TODO: Add error handling */
-                    }
-                }
-                else if(cmp(command, "deliverMail") == 0)
-                {
-                    /* Make sure the connection is from a server */
-                    if(connectionType == ClientType.SERVER)
-                    {
-                        /* Deliver the mail message from the remote host */
-                        deliverMail(commandBlock["request"]["mail"]);
-                    }
-                    else
-                    {
-                        /* TODO: Add error handling */
-                    }
-                }
-                else if(cmp(command, "fetchMail") == 0)
-                {
-                    /* Make sure the connection is from a client */
-                    if(connectionType == ClientType.CLIENT)
-                    {
-                        /* The folder where the mail message is stored */
-                        Folder fetchFolder = new Folder(mailbox, commandBlock["request"]["folder"].str());
-
-                        /* The mail ID of the mail message */
-                        string mailID = commandBlock["request"]["id"].str();
-
-                        /* Fetch the Mail */
-                        Mail fetchedMail = new Mail(mailbox, fetchFolder, mailID);
-
-                        /* Set the response */
-                        JSONValue response;
-                        response["mail"] = fetchedMail.getMessage();
-                        responseBlock["response"] = response;
-                    }
-                    else
-                    {
-                        /* TODO: Add error handling */
-                    }
-                }
-                else if(cmp(command, "createFolder") == 0)
-                {
-                    /* Make sure the connection is from a client */
-                    if(connectionType == ClientType.CLIENT)
-                    {
-                        /* TODO: Implement me */
-                        createFolder(commandBlock["request"]["folderName"].str());
-                    }
-                    else
-                    {
-                        /* TODO: Add error handling */
-                    }
-                }
-                else if(cmp(command, "deleteFolder") == 0)
-                {
-                    /* Make sure the connection is from a client */
-                    if(connectionType == ClientType.CLIENT)
-                    {
-                        /* TODO: Implement me */
-                    }
-                    else
-                    {
-                        /* TODO: Add error handling */
-                    }
-                }
-                else if(cmp(command, "addToFolder") == 0)
-                {
-                    /* Make sure the connection is from a client */
-                    if(connectionType == ClientType.CLIENT)
-                    {
-                        /* TODO: Implement me */
-                    }
-                    else
-                    {
-                        /* TODO: Add error handling */
-                    }
-                }
-                else if(cmp(command, "removeFromFolder") == 0)
-                {
-                    /* Make sure the connection is from a client */
-                    if(connectionType == ClientType.CLIENT)
-                    {
-                        /* TODO: Implement me */
-                    }
-                    else
-                    {
-                        /* TODO: Add error handling */
-                    }
-                }
-                else if(cmp(command, "listMail") == 0)
-                {
-                    /* Make sure the connection is from a client */
-                    if(connectionType == ClientType.CLIENT)
-                    {
-                        /* Get the folder wanting to be listed */
-                        Folder listFolder = new Folder(mailbox, commandBlock["request"]["folderName"].str());
-
-                        /* Write back an array of mailIDs */
-                        responseBlock["mailIDs"] = parseJSON(to!(string)(listFolder.getMessages()));
-                    }
-                    else
-                    {
-                        /* TODO: Add error handling */
-                    }
-                }
-                else if(cmp(command, "listFolder") == 0)
-                {
-                    /* Make sure the connection is from a client */
-                    if(connectionType == ClientType.CLIENT)
-                    {
-                        /* Get the folder wanting to be listed */
-                        Folder listFolder = new Folder(mailbox, commandBlock["request"]["folderName"].str());
-
-                        /* Write back an array of folder names */
-                        responseBlock["folders"] = parseJSON(to!(string)(listFolder.getFolders()));
-                    }
-                    else
-                    {
-                        /* TODO: Add error handling */
-                    }
-                }
-                else if(cmp(command, "totsiens") == 0)
-                {
-                    /* Close the connection on next loop condition check */
-                    active = false;
-                }
-                else
-                {
-                    /* TODO: Add error handling for invalid commands */
-                }
-
 
                 /* Generate the `status` field */
                 responseBlock["status"] = status;

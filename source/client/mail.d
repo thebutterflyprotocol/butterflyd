@@ -5,13 +5,6 @@ import std.file;
 import std.stdio;
 import std.string;
 
-/* TODO: Ref counter garbage collector for mail */
-
-public class ButterflyException
-{
-
-}
-
 /**
 * Mailbox
 *
