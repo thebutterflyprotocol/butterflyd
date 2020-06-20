@@ -17,7 +17,7 @@ public final class Mailbox
     /**
     * The owner of this Mailbox
     */
-    private string username;
+    public string username;
 
     // public static bool isMailbox(string username)
     // {

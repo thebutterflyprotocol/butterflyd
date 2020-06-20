@@ -306,26 +306,27 @@ public final class ButterflyClient : Thread
                 catch(JSONException e)
                 {
                     /* TODO: Set error message and status code */
-                    //status = e.
-                    writeln(e);
+                    status = -2;
+                    message = e.msg;
                 }
                 catch(FileException e)
                 {
                     /* Status=-1 :: I/O error */
                     status = -1;
-                    writeln(e);
+                    message = e.msg;
                 }
                 
                 catch(ErrnoException e)
                 {
                     /* Status=-1 :: I/O error */
                     status = -1;
-                    writeln(e);
+                    message = e.msg;
                 }
                 catch(ButterflyException e)
                 {
                     /* Set the status */
                     status = e.status;
+                    message = e.msg;
                 }
 
                 /* Generate the `status` block */
@@ -484,6 +485,9 @@ public final class ButterflyClient : Thread
     */
     private void sendMail(JSONValue mailBlock)
     {
+        /* Add the from field to the mail block */
+        mailBlock["from"] = mailbox.username~"@"~server.domain;
+
         /* Get a list of the recipients of the mail message */
         string[] recipients;
         foreach(JSONValue recipient; mailBlock["recipients"].array())
