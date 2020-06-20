@@ -318,7 +318,7 @@ public final class Mail
         JSONValue messageBlock;
 
         /* Get the file system path to this message */
-        string messageFilePath = mailbox.username~"/"~folder.folderPath~"/"~mailID;
+        string messageFilePath = "mailboxes/"~mailbox.username~"/"~folder.folderPath~"/"~mailID;
 
         /* TODO: Implement me */
         File file;

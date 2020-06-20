@@ -11,6 +11,7 @@ import server.server;
 import std.conv : to;
 import client.exceptions;
 import std.file;
+import std.exception;
 
 public final class ButterflyClient : Thread
 {
@@ -306,11 +307,20 @@ public final class ButterflyClient : Thread
                 {
                     /* TODO: Set error message and status code */
                     //status = e.
+                    writeln(e);
                 }
                 catch(FileException e)
                 {
                     /* Status=-1 :: I/O error */
                     status = -1;
+                    writeln(e);
+                }
+                
+                catch(ErrnoException e)
+                {
+                    /* Status=-1 :: I/O error */
+                    status = -1;
+                    writeln(e);
                 }
                 catch(ButterflyException e)
                 {
