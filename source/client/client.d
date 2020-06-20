@@ -77,11 +77,12 @@ public final class ButterflyClient : Thread
             bool recvStatus = receiveMessage(clientSocket, receivedBytes);
             writeln(recvStatus);
 
-            /* Reset the response JSON */
-            responseBlock = JSONValue();
-
+            /* If the receive succeeded */
             if(recvStatus)
             {
+                /* Reset the response JSON */
+                responseBlock = JSONValue();
+
                 /* TODO: Add error handling catch for all JSON here */
 
                 /* Parse the incoming JSON */
@@ -289,7 +290,6 @@ public final class ButterflyClient : Thread
                         /* TODO: Add error handling */
                     }
                 }
-                
                 else if(cmp(command, "totsiens") == 0)
                 {
                     /* Close the connection on next loop condition check */
@@ -299,28 +299,32 @@ public final class ButterflyClient : Thread
                 {
                     /* TODO: Add error handling for invalid commands */
                 }
+
+
+                /* Generate the `status` field */
+                responseBlock["status"] = status;
+
+                /* Write the response block to the client */
+                writeln("Writing back response: "~responseBlock.toPrettyString());
+                bool sendStatus = sendMessage(clientSocket, cast(byte[])toJSON(responseBlock));
+                writeln(sendStatus);
+
+                /* If there was an error writing the response back */
+                if(!sendStatus)
+                {
+                    /* End the session */
+                    active = false;
+                    writeln("Response write back failed");
+                }
             }
             else
             {
                 /* TODO: Add error handling here */
-            }
 
-            /* TODO: Write response here */
-            
-            /* Generate the `status` field */
-            responseBlock["status"] = status;
-
-            /* Write the response block to the client */
-            writeln("Writing back response: "~responseBlock.toPrettyString());
-            bool sendStatus = sendMessage(clientSocket, cast(byte[])toJSON(responseBlock));
-            writeln(sendStatus);
-
-            /* If there was an error writing the response back */
-            if(!sendStatus)
-            {
-                /* End the session */
+                /**
+                * If we failed to receive, then close the connection
+                */
                 active = false;
-                writeln("Response write back failed");
             }
         }
 
