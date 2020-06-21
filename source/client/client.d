@@ -578,6 +578,15 @@ public final class ButterflyClient : Thread
                 /* Get the Inbox folder */
                 Folder inboxFolder = new Folder(userMailbox, "Inbox");
 
+                /* Filter mail incoming (for local) */
+                reject = filterMailIncoming(&mailBlock);
+
+                /* Check to see if we must reject this mail */
+                if(reject)
+                {
+                    /* TODO: Implement me */
+                }
+
                 /* Store the message in their Inbox folder */
                 Mail.createMail(userMailbox, inboxFolder, mailBlock);
             }
