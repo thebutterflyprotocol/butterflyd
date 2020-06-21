@@ -433,6 +433,11 @@ public final class ButterflyClient : Thread
         return newFolder;
     }
 
+    private void filterMail(JSONValue* mailBlock)
+    {
+        /* TODO: Add filtering here */
+    }
+
     /**
     * Delivers the mail to the local users
     */
@@ -444,6 +449,10 @@ public final class ButterflyClient : Thread
         {
             recipients ~= recipient.str();
         }
+
+        /* TODO: Add plugin support and run the filter here for `from` field */
+        /* TODO: Or any field really */
+        filterMail(&mailBlock);
 
         /* Store the mail to each of the recipients */
         foreach(string recipient; recipients)
