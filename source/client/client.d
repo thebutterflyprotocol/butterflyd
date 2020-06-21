@@ -12,6 +12,7 @@ import std.conv : to;
 import client.exceptions;
 import std.file;
 import std.exception;
+import std.datetime.systime : Clock, SysTime;
 
 public final class ButterflyClient : Thread
 {
@@ -443,7 +444,6 @@ public final class ButterflyClient : Thread
     private bool filterMailIncoming(JSONValue* mailBlock)
     {
         /* Add the received time stamp */
-        import std.datetime.systime : Clock, SysTime;
         (*mailBlock)["receivedTimestamp"] = Clock.currTime().toString();
 
         /* TODO: Add plugin-based filtering here */
@@ -518,6 +518,9 @@ public final class ButterflyClient : Thread
     {
         /* Add the from field to the mail block */
         (*mailBlock)["from"] = mailbox.username~"@"~server.domain;
+
+        /* Add the sent time stamp */
+        (*mailBlock)["sentTimestamp"] = Clock.currTime().toString();
 
         /* TODO: Add plugin-based filtering here */
 
