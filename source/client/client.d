@@ -433,9 +433,23 @@ public final class ButterflyClient : Thread
         return newFolder;
     }
 
-    private void filterMail(JSONValue* mailBlock)
+    /**
+    * Given the address of the mail block, applying incoming
+    * mail filters to the mail message.
+    *
+    * Returns `true` if we are to outright reject this incoming
+    * mail.
+    */
+    private bool filterMailIncoming(JSONValue* mailBlock)
     {
-        /* TODO: Add filtering here */
+        /* Add the received time stamp */
+        import std.datetime.systime : Clock, SysTime;
+        (*mailBlock)["receivedTimestamp"] = Clock.currTime().toString();
+
+        /* TODO: Add plugin-based filtering here */
+
+        /* TODO: Implement rejection */
+        return false;
     }
 
     /**
@@ -443,16 +457,21 @@ public final class ButterflyClient : Thread
     */
     private void deliverMail(JSONValue mailBlock)
     {
+        /* Filter the mail */
+        bool reject = filterMailIncoming(&mailBlock);
+
+        /* Check to see if we must reject this mail */
+        if(reject)
+        {
+            /* TODO: Implement me */
+        }
+
         /* Get a list of the recipients of the mail message */
         string[] recipients;
         foreach(JSONValue recipient; mailBlock["recipients"].array())
         {
             recipients ~= recipient.str();
         }
-
-        /* TODO: Add plugin support and run the filter here for `from` field */
-        /* TODO: Or any field really */
-        filterMail(&mailBlock);
 
         /* Store the mail to each of the recipients */
         foreach(string recipient; recipients)
@@ -489,13 +508,37 @@ public final class ButterflyClient : Thread
     }
 
     /**
+    * Given the address of the mail block, applying outgoing
+    * mail filters to the mail message.
+    *
+    * Returns `true` if we are to outright reject this outgoing
+    * mail.
+    */
+    private bool filterMailOutgoing(JSONValue* mailBlock)
+    {
+        /* Add the from field to the mail block */
+        (*mailBlock)["from"] = mailbox.username~"@"~server.domain;
+
+        /* TODO: Add plugin-based filtering here */
+
+        /* TODO: Implement rejection */
+        return false;
+    }
+
+    /**
     * Sends the mail message `mail` to the servers
     * listed in the recipients field.
     */
     private void sendMail(JSONValue mailBlock)
     {
-        /* Add the from field to the mail block */
-        mailBlock["from"] = mailbox.username~"@"~server.domain;
+        /* Filter the mail */
+        bool reject = filterMailOutgoing(&mailBlock);
+
+        /* Check to see if we must reject this mail */
+        if(reject)
+        {
+            /* TODO: Implement me */
+        }
 
         /* Get a list of the recipients of the mail message */
         string[] recipients;
