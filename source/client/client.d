@@ -447,6 +447,7 @@ public final class ButterflyClient : Thread
         (*mailBlock)["receivedTimestamp"] = Clock.currTime().toString();
 
         /* TODO: Add plugin-based filtering here */
+        /* TODO: Filter using bester */
 
         /* TODO: Implement rejection */
         return false;
@@ -523,6 +524,7 @@ public final class ButterflyClient : Thread
         (*mailBlock)["sentTimestamp"] = Clock.currTime().toString();
 
         /* TODO: Add plugin-based filtering here */
+        /* TODO: Filter using bester */
 
         /* TODO: Implement rejection */
         return false;
