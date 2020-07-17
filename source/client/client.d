@@ -634,6 +634,7 @@ public final class ButterflyClient : Thread
 
                     if(!recvStatus)
                     {
+                        writeln("Fuck");
                         goto deliveryFailed;
                     }
 
