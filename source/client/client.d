@@ -632,6 +632,8 @@ public final class ButterflyClient : Thread
                     byte[] receivedBytes;
                     bool recvStatus = receiveMessage(clientSocket, receivedBytes);
 
+                    writeln("Henlo");
+
                     if(!recvStatus)
                     {
                         writeln("Fuck");
