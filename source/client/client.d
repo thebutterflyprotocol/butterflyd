@@ -611,6 +611,8 @@ public final class ButterflyClient : Thread
                 /* Deliver the mail to the remote server */
                 Socket remoteServer = new Socket(AddressFamily.INET, SocketType.STREAM, ProtocolType.TCP);
                 
+                /* TODO: Split domain here to address:port */
+
                 try
                 {
                     remoteServer.connect(parseAddress(domain, 6969));
