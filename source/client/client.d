@@ -627,6 +627,8 @@ public final class ButterflyClient : Thread
                         goto deliveryFailed;
                     }
 
+                    writeln("Awaiting message back");
+
                     byte[] receivedBytes;
                     bool recvStatus = receiveMessage(clientSocket, receivedBytes);
 
