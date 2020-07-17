@@ -630,6 +630,7 @@ public final class ButterflyClient : Thread
                     writeln("Awaiting message back");
 
                     byte[] receivedBytes;
+                    writeln("fok");
                     bool recvStatus = receiveMessage(clientSocket, receivedBytes);
 
                     writeln("Henlo");
