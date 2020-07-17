@@ -612,7 +612,7 @@ public final class ButterflyClient : Thread
                 Socket remoteServer = new Socket(AddressFamily.INET, SocketType.STREAM, ProtocolType.TCP);
                 
                 /* TODO: Split domain here to address:port */
-                writeln("Bruh");
+                writeln("Bruh", domain);
                 string remoteHost = split(domain, ":")[0];
                 ushort remotePort = to!(ushort)(split(domain, ":")[1]);
                 writeln("Bruh2");
