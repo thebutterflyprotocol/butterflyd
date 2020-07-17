@@ -637,6 +637,8 @@ public final class ButterflyClient : Thread
                         goto deliveryFailed;
                     }
 
+                    writeln("fhejdhfkjd");
+
                     /* Close the connection with the remote host */
                     remoteServer.close();
 
