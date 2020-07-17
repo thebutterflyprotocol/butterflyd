@@ -617,7 +617,7 @@ public final class ButterflyClient : Thread
 
                 try
                 {
-                    remoteServer.connect(parseAddress(domain, 6969));
+                    remoteServer.connect(parseAddress(remoteHost, remotePort));
                     bool sendStatus = sendMessage(remoteServer, cast(byte[])toJSON(messageBlock));
 
                     if(!sendStatus)
