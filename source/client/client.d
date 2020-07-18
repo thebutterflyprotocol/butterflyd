@@ -612,10 +612,8 @@ public final class ButterflyClient : Thread
                 Socket remoteServer = new Socket(AddressFamily.INET, SocketType.STREAM, ProtocolType.TCP);
                 
                 /* TODO: Split domain here to address:port */
-                writeln("Bruh", domain);
                 string remoteHost = split(domain, ":")[0];
                 ushort remotePort = to!(ushort)(split(domain, ":")[1]);
-                writeln("Bruh2");
 
                 try
                 {
@@ -627,21 +625,13 @@ public final class ButterflyClient : Thread
                         goto deliveryFailed;
                     }
 
-                    writeln("Awaiting message back");
-
                     byte[] receivedBytes;
-                    writeln("fok");
                     bool recvStatus = receiveMessage(remoteServer, receivedBytes);
-
-                    writeln("Henlo");
 
                     if(!recvStatus)
                     {
-                        writeln("Fuck");
                         goto deliveryFailed;
                     }
-
-                    writeln("fhejdhfkjd");
 
                     /* Close the connection with the remote host */
                     remoteServer.close();
