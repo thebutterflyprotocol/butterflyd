@@ -638,7 +638,7 @@ public final class ButterflyClient : Thread
 
                     JSONValue responseBlock = parseJSON(cast(string)receivedBytes);
 
-                    /* TODO: Get status code here an act on it */
+                    /* TODO: Get ["status"]["code"] code here an act on it */
                     if(responseBlock["status"].integer() == 0)
                     {
                         writeln("Message delivered to server "~domain);
