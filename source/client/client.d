@@ -658,14 +658,24 @@ public final class ButterflyClient : Thread
                 }     
                 catch(JSONException)
                 {
+                    /* When delivery fails */
                     deliveryFailed:
                         writeln("Error delivering to server "~domain);
 
-                        /* TODO: Make a list of all the servers we failed to deliver to */
-                        failedRecipients~=domain;
+                        /* Append failed recipient to array of failed recipients */
+                        failedRecipients ~= domain;
 
                         continue;
                 }
+            }
+
+            /**
+            * If there are failed sends then send an error message
+            * to the sender.
+            */
+            if(failedRecipients.length)
+            {
+                /* TODO: Implement me */
             }
 
             writeln("Sent mail message");
