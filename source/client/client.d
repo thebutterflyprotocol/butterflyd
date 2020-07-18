@@ -552,6 +552,10 @@ public final class ButterflyClient : Thread
             recipients ~= recipient.str();
         }
 
+
+        /* List of server's failed to deliver to */
+        string[] failedRecipients;
+
         /* Send the mail to each of the recipients */
         foreach(string recipient; recipients)
         {
@@ -656,6 +660,10 @@ public final class ButterflyClient : Thread
                 {
                     deliveryFailed:
                         writeln("Error delivering to server "~domain);
+
+                        /* TODO: Make a list of all the servers we failed to deliver to */
+                        failedRecipients~=domain;
+
                         continue;
                 }
             }
