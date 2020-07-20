@@ -677,8 +677,6 @@ public final class ButterflyClient : Thread
             */
             if(failedRecipients.length)
             {
-                /* TODO: Implement me */
-
                 /* Create the error message */
                 JSONValue deliveryReport;
                 JSONValue[] errorRecipients = [JSONValue("")];

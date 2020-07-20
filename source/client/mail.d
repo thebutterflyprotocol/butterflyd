@@ -19,11 +19,9 @@ public final class Mailbox
     */
     public string username;
 
-    // public static bool isMailbox(string username)
-    // {
-    //     return true;
-    // }
-
+    /**
+    * Returns `true` if the given mailbox, `username`, exists.
+    */
     public static bool isMailbox(string username)
     {
         return exists("mailboxes/"~username) && isDir("mailboxes/"~username);
