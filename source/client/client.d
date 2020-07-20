@@ -675,34 +675,35 @@ public final class ButterflyClient : Thread
                 }
             }
 
-            /**
-            * If there are failed sends then send an error message
-            * to the sender.
-            */
-            if(failedRecipients.length)
-            {
-                /* Create the error message */
-                JSONValue deliveryReport;
-                JSONValue[] errorRecipients = [JSONValue(mailbox.username~"@"~server.domain)];
-                deliveryReport["recipients"] = errorRecipients;
-
-                /* TODO: Make more indepth, and have copy of the mail that was tried to be sent */
-                string errorMessage = "There was an error delivery the mail to: "~to!(string)(recipients)~"\n";
-                errorMessage ~= "\nThe message was:\n\n"~mailBlock.toPrettyString();
-                deliveryReport["message"] = errorMessage;
-
-                writeln(deliveryReport);
-
-                /* Deliver the error message */
-                sendMail(deliveryReport);
-
-                writeln("Mail delivery report sent: "~deliveryReport.toPrettyString());
-            }
-
             writeln("Sent mail message");
         }
 
         writeln("Mail delivered");
+
+        /**
+        * If there are failed sends then send an error message
+        * to the sender.
+        */
+        if(failedRecipients.length)
+        {
+            /* Create the error message */
+            JSONValue deliveryReport;
+            JSONValue[] errorRecipients = [JSONValue(mailbox.username~"@"~server.domain)];
+            deliveryReport["recipients"] = errorRecipients;
+
+            /* TODO: Make more indepth, and have copy of the mail that was tried to be sent */
+            string errorMessage = "There was an error delivery the mail to: "~to!(string)(recipients)~"\n";
+            errorMessage ~= "\nThe message was:\n\n"~mailBlock.toPrettyString();
+            deliveryReport["message"] = errorMessage;
+
+            writeln(deliveryReport);
+
+            /* Deliver the error message */
+            sendMail(deliveryReport);
+
+            writeln("Mail delivery report sent: "~deliveryReport.toPrettyString());
+        }
+
 
         /* Store the message in this user's "Sent" folder */
         Folder sentFolder = new Folder(mailbox, "Sent");
