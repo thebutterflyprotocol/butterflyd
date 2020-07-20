@@ -582,7 +582,6 @@ public final class ButterflyClient : Thread
                 if(!Mailbox.isMailbox(username))
                 {
                     goto deliveryFailed;
-                
                 }
 
                 /* Get the Mailbox of a given user */
@@ -688,7 +687,9 @@ public final class ButterflyClient : Thread
                 deliveryReport["recipients"] = mailbox.username~"@"~server.domain;
 
                 /* TODO: Make more indepth, and have copy of the mail that was tried to be sent */
-                deliveryReport["message"] = "There was an error delivery the mail to: "~to!(string)(recipients);
+                string errorMessage = "There was an error delivery the mail to: "~to!(string)(recipients)~"\n";
+                errorMessage ~= "\nThe message was:\n\n"~mailBlock.toPrettyString();
+                deliveryReport["message"] = errorMessage;
                 
                 /* Deliver the error message */
                 deliverMail(deliveryReport);
