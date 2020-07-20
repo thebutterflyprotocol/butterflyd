@@ -692,7 +692,7 @@ public final class ButterflyClient : Thread
                 deliveryReport["message"] = errorMessage;
                 
                 /* Deliver the error message */
-                deliverMail(deliveryReport);
+                sendMail(deliveryReport);
 
                 writeln("Mail delivery report sent: "~deliveryReport.toPrettyString());
             }
