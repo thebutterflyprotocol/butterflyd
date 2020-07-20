@@ -579,6 +579,11 @@ public final class ButterflyClient : Thread
                 writeln("Local delivery occurring...");
 
                 /* TODO: Add failed delivery here too */
+                if(!Mailbox.isMailbox(username))
+                {
+                    goto deliveryFailed;
+                
+                }
 
                 /* Get the Mailbox of a given user */
                 Mailbox userMailbox = new Mailbox(username);
@@ -603,26 +608,26 @@ public final class ButterflyClient : Thread
                 /* TODO: Do remote mail delivery */
                 writeln("Remote delivery occurring...");
 
-                /**
-                * Construct the server message to send to the
-                * remote server.
-                */
-                JSONValue messageBlock;
-                messageBlock["command"] = "deliverMail";
-
-                JSONValue requestBlock;
-                requestBlock["mail"] = mailBlock;
-                messageBlock["request"] = requestBlock;
-
-                /* Deliver the mail to the remote server */
-                Socket remoteServer = new Socket(AddressFamily.INET, SocketType.STREAM, ProtocolType.TCP);
-                
-                /* TODO: Add check over here to make sure these are met */
-                string remoteHost = split(domain, ":")[0];
-                ushort remotePort = to!(ushort)(split(domain, ":")[1]);
-
                 try
                 {
+                    /**
+                    * Construct the server message to send to the
+                    * remote server.
+                    */
+                    JSONValue messageBlock;
+                    messageBlock["command"] = "deliverMail";
+
+                    JSONValue requestBlock;
+                    requestBlock["mail"] = mailBlock;
+                    messageBlock["request"] = requestBlock;
+
+                    /* Deliver the mail to the remote server */
+                    Socket remoteServer = new Socket(AddressFamily.INET, SocketType.STREAM, ProtocolType.TCP);
+                    
+                    /* TODO: Add check over here to make sure these are met */
+                    string remoteHost = split(domain, ":")[0];
+                    ushort remotePort = to!(ushort)(split(domain, ":")[1]);
+
                     remoteServer.connect(parseAddress(remoteHost, remotePort));
                     bool sendStatus = sendMessage(remoteServer, cast(byte[])toJSON(messageBlock));
 
