@@ -690,7 +690,9 @@ public final class ButterflyClient : Thread
                 string errorMessage = "There was an error delivery the mail to: "~to!(string)(recipients)~"\n";
                 errorMessage ~= "\nThe message was:\n\n"~mailBlock.toPrettyString();
                 deliveryReport["message"] = errorMessage;
-                
+
+                writeln(deliveryReport);
+
                 /* Deliver the error message */
                 sendMail(deliveryReport);
 
