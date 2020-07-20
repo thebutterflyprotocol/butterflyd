@@ -669,7 +669,7 @@ public final class ButterflyClient : Thread
                         writeln("Error delivering to server "~domain);
 
                         /* Append failed recipient to array of failed recipients */
-                        failedRecipients ~= domain;
+                        failedRecipients ~= recipient;
 
                         continue;
                 }
