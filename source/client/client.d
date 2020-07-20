@@ -651,7 +651,7 @@ public final class ButterflyClient : Thread
                     /* TODO: Get ["status"]["code"] code here an act on it */
                     if(responseBlock["status"]["code"].integer() == 0)
                     {
-                        writeln("Message delivered to user "~username~" on server "~domain);
+                        writeln("Message delivered to user "~recipient);
                     }
                     else
                     {
@@ -666,7 +666,7 @@ public final class ButterflyClient : Thread
                 {
                     /* When delivery fails */
                     deliveryFailed:
-                        writeln("Error delivering to user "~username~" on server "~domain);
+                        writeln("Error delivering to "~recipient);
 
                         /* Append failed recipient to array of failed recipients */
                         failedRecipients ~= recipient;
@@ -675,7 +675,7 @@ public final class ButterflyClient : Thread
                 }
             }
 
-            writeln("Sent mail message");
+            writeln("Sent mail message to "~recipient);
         }
 
         writeln("Mail delivered");
