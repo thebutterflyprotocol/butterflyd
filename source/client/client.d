@@ -578,6 +578,8 @@ public final class ButterflyClient : Thread
             {
                 writeln("Local delivery occurring...");
 
+                /* TODO: Add failed delivery here too */
+
                 /* Get the Mailbox of a given user */
                 Mailbox userMailbox = new Mailbox(username);
 
@@ -676,6 +678,17 @@ public final class ButterflyClient : Thread
             if(failedRecipients.length)
             {
                 /* TODO: Implement me */
+
+                /* Create the error message */
+                JSONValue deliveryReport;
+                JSONValue[] errorRecipients = [JSONValue("")];
+                deliveryReport["recipients"] = errorRecipients;
+
+                /* TODO: Make more indepth, and have copy of the mail that was tried to be sent */
+                deliveryReport["message"] = "There was an error delivery the mail to: "~to!(string)(recipients);
+                
+                /* Deliver the error message */
+                deliverMail(deliveryReport);
             }
 
             writeln("Sent mail message");
