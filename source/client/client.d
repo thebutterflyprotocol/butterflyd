@@ -682,7 +682,7 @@ public final class ButterflyClient : Thread
                 /* Create the error message */
                 JSONValue deliveryReport;
                 JSONValue[] errorRecipients = [JSONValue("")];
-                deliveryReport["recipients"] = errorRecipients;
+                deliveryReport["recipients"] = mailbox.username~"@"~server.domain;
 
                 /* TODO: Make more indepth, and have copy of the mail that was tried to be sent */
                 deliveryReport["message"] = "There was an error delivery the mail to: "~to!(string)(recipients);
