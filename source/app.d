@@ -3,8 +3,8 @@ import std.stdio;
 import server.server : ButterflyServer;
 import std.socket : Address, parseAddress;
 import std.file;
-import std.json;
-import std.conv;
+import std.json : JSONValue, parseJSON;
+import std.conv : to;
 
 void main()
 {
