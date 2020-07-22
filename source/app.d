@@ -22,6 +22,6 @@ void main()
 	config = parseJSON(cast(string)bytes);
 
 	/* Start the server */
-	Address address = parseAddress(config["address"].str(), cast(ushort)config["port"].uinteger());
+	Address address = parseAddress(config["address"].str(), to!(ushort)(config["port"].str()));
 	ButterflyServer server = new ButterflyServer(address, config["domain"].str());
 }
