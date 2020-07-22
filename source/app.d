@@ -4,6 +4,7 @@ import server.server : ButterflyServer;
 import std.socket : Address, parseAddress;
 import std.file;
 import std.json;
+import std.conv;
 
 void main()
 {
@@ -21,6 +22,6 @@ void main()
 	config = parseJSON(cast(string)bytes);
 
 	/* Start the server */
-	Address address = parseAddress(config["address"].str(), 6969);
+	Address address = parseAddress(config["address"].str(), to!(ushort)(config["port"].str()));
 	ButterflyServer server = new ButterflyServer(address, config["domain"].str());
 }
