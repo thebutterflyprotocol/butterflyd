@@ -36,10 +36,10 @@ public class IPv4Listener : ButterflyListener
             Socket clientConnection = serverSocket.accept();
 
 
-            ButterflyClient client = new ButterflyClient();
+            ButterflyClient client = new ButterflyClient(this, clientConnection);
 
             /* Start the client handler */
-            butterflyClient.start();
+            client.start();
         }
     }
 }
