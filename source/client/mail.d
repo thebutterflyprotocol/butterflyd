@@ -338,4 +338,9 @@ public final class Mail
     {
         return "\""~mailID~"\"";
     }
+
+    public string getMailID()
+    {
+        return mailID;
+    }
 }

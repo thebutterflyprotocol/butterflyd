@@ -170,7 +170,9 @@ public final class ButterflyClient : Thread
                             Folder storeFolder = new Folder(mailbox, commandBlock["request"]["folder"].str());
                         
                             /* Store the message in the mailbox */
-                            storeMail(storeFolder, mailBlock);
+                            Mail storedMail = storeMail(storeFolder, mailBlock);
+
+                            responseBlock["response"]["mailID"] = storedMail.getMailID();
                         }
                         else
                         {
