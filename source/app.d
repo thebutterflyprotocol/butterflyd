@@ -5,6 +5,7 @@ import std.socket : Address, parseAddress;
 import std.file;
 import std.json : JSONValue, parseJSON;
 import std.conv : to;
+import server.listener : ButterflyListener;
 
 void main()
 {
@@ -21,7 +22,23 @@ void main()
 
 	config = parseJSON(cast(string)bytes);
 
+	/* Construct the listeners form the config file */
+	ButterflyListener[] listeners = constructListeners(config["listeners"]);
+
 	/* Start the server */
 	Address address = parseAddress(config["address"].str(), to!(ushort)(config["port"].str()));
-	ButterflyServer server = new ButterflyServer(address, config["domain"].str());
+	ButterflyServer server = new ButterflyServer(listeners, config["domain"].str());
+}
+
+private ButterflyListener[] constructListeners(JSONValue listenersBlock)
+{
+	ButterflyListener[] listeners;
+	
+	string[] enabledListeners;
+	foreach(JSONValue listenerType; listenersBlock["enabled"].array())
+	{
+		enabledListeners ~= listenerType.str();
+	}
+
+	return listeners;
 }
