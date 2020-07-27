@@ -3,6 +3,7 @@ module server.server;
 import std.socket : Socket, Address, SocketType, ProtocolType;
 import client.client : ButterflyClient;
 import std.file : mkdir, exists, isDir;
+import server.listener : ButterflyListener;
 
 public final class ButterflyServer
 {
@@ -10,6 +11,7 @@ public final class ButterflyServer
     * TODO: Later implement listeners so that we can
     * bind to multiple sockets.
     */
+    private ButterflyListener[] listeners;
 
     /**
     * Socket to listen for incoming connections on
@@ -24,7 +26,7 @@ public final class ButterflyServer
     /* TODO: Server domain */
     public string domain;
 
-    this(Address bindAddress, string domain)
+    this(ButterflyListener[] listeners, string domain)
     {
         /**
         * Create the needed directories (if not already present)
@@ -32,20 +34,15 @@ public final class ButterflyServer
         directoryCheck();
 
         /**
-        * Instantiate a new Socket for the given Address
-        * `bindAddress` of which it will bind to.
+        * Set all the listeners
         */
-        serverSocket = new Socket(bindAddress.addressFamily, SocketType.STREAM, ProtocolType.TCP);
-        serverSocket.bind(bindAddress);
+        this.listeners = listeners;
 
         /* Set the domain of the server */
         this.domain = domain;
 
         /* Start accepting connections */
         run();
-
-        /* Close the socket */
-        serverSocket.close();
     }
 
     private void directoryCheck()
@@ -93,26 +90,11 @@ public final class ButterflyServer
 
     private void run()
     {
-        /* TODO: backlog */
-        /* Start accepting incoming connections */
-        serverSocket.listen(1);
-
-        /* TODO: Loop here */
-        while(active)
+        /* Start the listeners */
+        foreach(ButterflyListener listener; listeners)
         {
-            /* Block for an incoming queued connection */
-            Socket clientSocket = serverSocket.accept();
-
-            /**
-            * Create a new ButterflyClient to represent the
-            * client connection.
-            */
-            ButterflyClient client = new ButterflyClient(this, clientSocket);
-
-            /* Start the client thread */
-            client.start();
-
-            /* TODO: Add to array */
+            listener.start();
         }
     }
+
 }
