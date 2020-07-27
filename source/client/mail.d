@@ -92,6 +92,9 @@ public final class Mailbox
         mailFile.close();
     }
 
+	/**
+	 * Deletes the given message in the given folder path
+	 */
     public void deleteMessage(Folder folder, string mailID)
     {
         /* Generate the filename to store the message under */
@@ -210,6 +213,29 @@ public final class Folder
     public void deleteFolder()
     {
         /* TODO: Implement me */
+        
+        /* Get a list of all files in this folder */
+        Mail[] messages = getMessages();
+        
+        /* Delete all messages in this folder */
+        foreach(Mail message; messages)
+        {
+			message.deleteMessage();
+		}
+        
+        /* Get a list of all folders in this folder */
+        Folder[] folders = getFolders();
+        
+        /**
+         * Delete all child folders of the current
+         */
+        foreach(Folder child; folders)
+        {
+			child.deleteFolder();
+		}
+		
+        /* Delete this folder */
+        rmdir(folderPath);
     }
 
     /**
