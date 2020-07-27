@@ -10,9 +10,9 @@ public class IPv4Listener : ButterflyListener
 
     private Socket serverSocket;
 
-    this(string name, JSONValue config)
+    this(string name, string domain, JSONValue config)
     {
-        super(name, config);
+        super(name, domain, config);
 
         Address bindAddress;
         /**

@@ -11,11 +11,12 @@ public abstract class ButterflyListener : Thread
     private JSONValue config;
     private string domain;
 
-    this(string listenerName, JSONValue config)
+    this(string listenerName, string domain, JSONValue config)
     {
         super(&run);
         this.listenerName = listenerName;
         this.config = config;
+        this.domain = domain;
     }
 
     public abstract void run()
