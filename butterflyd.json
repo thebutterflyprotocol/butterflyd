@@ -1,6 +1,6 @@
 {
     "listeners" : {
-        "enabled" : [],
+        "enabled" : ["listener1"],
         "listener1" : {
             "type" : "ipv4",
             "domain" : "10.0.0.9:2222",

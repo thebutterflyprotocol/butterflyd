@@ -7,6 +7,7 @@ import std.json : JSONValue, parseJSON;
 import std.conv : to;
 import server.listener : ButterflyListener;
 import server.listeners;
+import std.string : cmp;
 
 void main()
 {
@@ -47,9 +48,12 @@ private ButterflyListener[] constructListeners(JSONValue listenersBlock)
 	{
 		writeln("Constructing listener \"" ~ listener ~ "\" ...");
 
+		if(cmp(listenersBlock[listener]["type"].str(), "ipv4") == 0)
+		{
+			listeners ~= new IPv4Listener(listener, listenersBlock[listener]);
+		}
 
-
-		writeln("Listener \"" ~ listener ~ "\"constructed");
+		writeln("Listener \"" ~ listener ~ "\" constructed");
 	}
 
 	return listeners;

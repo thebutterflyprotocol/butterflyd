@@ -2,20 +2,22 @@ module server.listeners;
 
 import core.thread : Thread;
 import server.listener : ButterflyListener;
-import std.socket : Socket, Address, SocketType, ProtocolType;
+import std.socket : Socket, Address, SocketType, ProtocolType, parseAddress;
 import std.json : JSONValue;
 import client.client;
+import std.conv : to;
 
 public class IPv4Listener : ButterflyListener
 {
 
     private Socket serverSocket;
 
-    this(string name, string domain, JSONValue config)
+    this(string name, JSONValue config)
     {
-        super(name, domain, config);
+        super(name, config["domain"].str(), config);
 
-        Address bindAddress;
+        Address bindAddress = parseAddress(config["address"].str(), to!(ushort)(config["port"].str()));
+
         /**
         * Instantiate a new Socket for the given Address
         * `bindAddress` of which it will bind to.
