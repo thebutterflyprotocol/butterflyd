@@ -5,6 +5,7 @@ import client.client : ButterflyClient;
 import std.file : mkdir, exists, isDir;
 import server.listener : ButterflyListener;
 import std.stdio : writeln;
+import std.string : cmp;
 
 public final class ButterflyServer
 {
@@ -24,9 +25,6 @@ public final class ButterflyServer
     */
     private bool active = true;
 
-    /* TODO: Server domain */
-    public string domain;
-
     this(ButterflyListener[] listeners)
     {
         /**
@@ -38,9 +36,6 @@ public final class ButterflyServer
         * Set all the listeners
         */
         this.listeners = listeners;
-
-        /* Set the domain of the server */
-        this.domain = domain;
 
         /* Start accepting connections */
         run();
@@ -99,6 +94,23 @@ public final class ButterflyServer
             listener.start();
             writeln("Listener \"" ~ listener.getName() ~ "\" started");
         }
+    }
+
+    public bool isLocalDomain(string domain)
+    {
+        /**
+        * Loop through each listener and check if the requested domain
+        * appears in one of them.
+        */ 
+        foreach(ButterflyListener listener; listeners)
+        {
+            if(cmp(listener.getDomain(), domain) == 0)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
 }
