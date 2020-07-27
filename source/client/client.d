@@ -258,7 +258,11 @@ public final class ButterflyClient : Thread
                         /* Make sure the connection is from a client */
                         if(connectionType == ClientType.CLIENT)
                         {
-                            /* TODO: Implement me */
+                            /* The folder to be deleted */
+                            Folder deleteFolder = new Folder(mailbox, commandBlock["request"]["folder"].str());
+                            
+                            /* Delete the folder */
+                            deleteFolder.deleteFolder();
                         }
                         else
                         {
