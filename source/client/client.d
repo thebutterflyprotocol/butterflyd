@@ -179,6 +179,30 @@ public final class ButterflyClient : Thread
                             /* TODO: Add error handling */
                         }
                     }
+                    else if(cmp(command, "editMail") == 0)
+                    {
+                        /* Make sure the connection is from a client */
+                        if(connectionType == ClientType.CLIENT)
+                        {
+                            /* Get the mail block */
+                            JSONValue mailBlock = commandBlock["request"]["mail"];
+
+							/* Get the folder the mail message wanting to be edited resides in */
+                            Folder storeFolder = new Folder(mailbox, commandBlock["request"]["folder"].str());
+
+							/* Get the mail message wanting to be edited */
+							Mail messageOriginal = new Mail(mailbox, storeFolder, commandBlock["request"]["mailID"].str());
+
+                            /* Update the message with the new data */
+                            Mail updatedMail = editMail(messageOriginal, storeFolder, mailBlock);
+
+                            responseBlock["response"]["mailID"] = updatedMail.getMailID();
+                        }
+                        else
+                        {
+                            /* TODO: Add error handling */
+                        }
+                    }
                     else if(cmp(command, "deliverMail") == 0)
                     {
                         /* Make sure the connection is from a server */
@@ -380,6 +404,23 @@ public final class ButterflyClient : Thread
 
         return savedMail;
     }
+    
+    /**
+     * Updates the given mail message in the
+     * provided folder with a new message.
+     */
+    private Mail editMail(Mail messageOriginal, Folder storeFolder, JSONValue mailBlock)
+    {
+		Mail updatedMail;
+		
+		/* Delete the old message */
+		mailbox.deleteMessage(storeFolder, messageOriginal.getMailID());
+		
+		/* Store the new message in the same folder */
+		updatedMail = Mail.createMail(mailbox, storeFolder, mailBlock);
+		
+		return updatedMail;
+	}
 
     private bool authenticate(string username, string password)
     {

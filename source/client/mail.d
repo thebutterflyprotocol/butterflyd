@@ -94,7 +94,11 @@ public final class Mailbox
 
     public void deleteMessage(Folder folder, string mailID)
     {
-        /* TODO: Implement me */
+        /* Generate the filename to store the message under */
+        string filename = "mailboxes/"~username~"/"~folder.folderPath~"/"~mailID;
+
+		/* Delete the mail message */
+		remove(filename);
     }
 
     public void deleteMailbox()

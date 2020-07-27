@@ -52,6 +52,10 @@ private ButterflyListener[] constructListeners(JSONValue listenersBlock)
 		{
 			listeners ~= new IPv4Listener(listener, listenersBlock[listener]);
 		}
+		else if(cmp(listenersBlock[listener]["type"].str(), "ipv6") == 0)
+		{
+			listeners ~= new IPv6Listener(listener, listenersBlock[listener]);
+		}
 
 		writeln("Listener \"" ~ listener ~ "\" constructed");
 	}
