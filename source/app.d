@@ -6,6 +6,7 @@ import std.file;
 import std.json : JSONValue, parseJSON;
 import std.conv : to;
 import server.listener : ButterflyListener;
+import server.listeners;
 
 void main()
 {
@@ -38,6 +39,15 @@ private ButterflyListener[] constructListeners(JSONValue listenersBlock)
 	foreach(JSONValue listenerType; listenersBlock["enabled"].array())
 	{
 		enabledListeners ~= listenerType.str();
+	}
+
+	foreach(string listener; enabledListeners)
+	{
+		writeln("Constructing listener \"" ~ listener ~ "\" ...");
+
+		
+
+		writeln("Listener \"" ~ listener ~ "\"constructed");
 	}
 
 	return listeners;

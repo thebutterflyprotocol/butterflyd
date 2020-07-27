@@ -4,6 +4,7 @@ import std.socket : Socket, Address, SocketType, ProtocolType;
 import client.client : ButterflyClient;
 import std.file : mkdir, exists, isDir;
 import server.listener : ButterflyListener;
+import std.stdio : writeln;
 
 public final class ButterflyServer
 {
@@ -93,7 +94,10 @@ public final class ButterflyServer
         /* Start the listeners */
         foreach(ButterflyListener listener; listeners)
         {
+            writeln("Starting listener \"" ~ listener.getName() ~"\" ...");
+            writeln("Listener is using configuration: "~listener.getConfig().toPrettyString());
             listener.start();
+            writeln("Listener \"" ~ listener.getName() ~ "\" started");
         }
     }
 
