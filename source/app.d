@@ -27,8 +27,8 @@ void main()
 	ButterflyListener[] listeners = constructListeners(config["listeners"]);
 
 	/* Start the server */
-	Address address = parseAddress(config["address"].str(), to!(ushort)(config["port"].str()));
-	ButterflyServer server = new ButterflyServer(listeners, config["domain"].str());
+	//Address address = parseAddress(config["address"].str(), to!(ushort)(config["port"].str()));
+	ButterflyServer server = new ButterflyServer(listeners);
 }
 
 private ButterflyListener[] constructListeners(JSONValue listenersBlock)
@@ -45,7 +45,7 @@ private ButterflyListener[] constructListeners(JSONValue listenersBlock)
 	{
 		writeln("Constructing listener \"" ~ listener ~ "\" ...");
 
-		
+
 
 		writeln("Listener \"" ~ listener ~ "\"constructed");
 	}

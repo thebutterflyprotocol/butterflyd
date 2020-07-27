@@ -27,7 +27,7 @@ public final class ButterflyServer
     /* TODO: Server domain */
     public string domain;
 
-    this(ButterflyListener[] listeners, string domain)
+    this(ButterflyListener[] listeners)
     {
         /**
         * Create the needed directories (if not already present)

@@ -9,6 +9,7 @@ public abstract class ButterflyListener : Thread
     private ButterflyServer server;
     private string listenerName;
     private JSONValue config;
+    private string domain;
 
     this(string listenerName, JSONValue config)
     {
@@ -30,6 +31,11 @@ public abstract class ButterflyListener : Thread
     public string getName()
     {
         return listenerName;
+    }
+
+    public string getDomain()
+    {
+        return domain;
     }
 
     public JSONValue getConfig()
