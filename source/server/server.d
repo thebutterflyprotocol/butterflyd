@@ -37,8 +37,13 @@ public final class ButterflyServer
         */
         this.listeners = listeners;
 
-        /* Start accepting connections */
-        run();
+        /**
+        * Set the server of all listeners to this server
+        */
+        foreach(ButterflyListener listener; listeners)
+        {
+            listener.setServer(this);
+        }
     }
 
     private void directoryCheck()
@@ -84,7 +89,7 @@ public final class ButterflyServer
         }  
     }
 
-    private void run()
+    public void run()
     {
         /* Start the listeners */
         foreach(ButterflyListener listener; listeners)

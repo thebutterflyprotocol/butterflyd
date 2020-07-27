@@ -13,13 +13,14 @@ import client.exceptions;
 import std.file;
 import std.exception;
 import std.datetime.systime : Clock, SysTime;
+import server.listener : ButterflyListener;
 
 public final class ButterflyClient : Thread
 {
     /**
-    * The associated server
+    * The associated listener
     */
-    private ButterflyServer server;
+    private ButterflyListener listener;
 
     /**
     * Socket of the client connection
@@ -48,11 +49,11 @@ public final class ButterflyClient : Thread
     */
     private Mailbox mailbox;
 
-    this(ButterflyServer server, Socket clientSocket)
+    this(ButterflyListener listener, Socket clientSocket)
     {
         super(&run);
         this.clientSocket = clientSocket;
-        this.server = server;
+        this.listener = listener;
     }
 
     private void run()
@@ -490,7 +491,7 @@ public final class ButterflyClient : Thread
             * Check if the domain of this recipient is this server
             * or if it is a remote server.
             */
-            if(cmp(domain, server.domain) == 0)
+            if(cmp(domain, listener.getDomain()) == 0)
             {
                 writeln("Storing mail message to "~recipient~" ...");
 
@@ -518,7 +519,7 @@ public final class ButterflyClient : Thread
     private bool filterMailOutgoing(JSONValue* mailBlock)
     {
         /* Add the from field to the mail block */
-        (*mailBlock)["from"] = mailbox.username~"@"~server.domain;
+        (*mailBlock)["from"] = mailbox.username~"@"~listener.getDomain();
 
         /* Add the sent time stamp */
         (*mailBlock)["sentTimestamp"] = Clock.currTime().toString();
@@ -574,7 +575,7 @@ public final class ButterflyClient : Thread
             * Check if the domain of this recipient is this server
             * or if it is a remote server.
             */
-            if(server.isLocalDomain(domain))
+            if(listener.getServer().isLocalDomain(domain))
             {
                 writeln("Local delivery occurring...");
 
@@ -688,7 +689,7 @@ public final class ButterflyClient : Thread
         {
             /* Create the error message */
             JSONValue deliveryReport;
-            JSONValue[] errorRecipients = [JSONValue(mailbox.username~"@"~server.domain)];
+            JSONValue[] errorRecipients = [JSONValue(mailbox.username~"@"~listener.getDomain())];
             deliveryReport["recipients"] = errorRecipients;
 
             /* TODO: Make more indepth, and have copy of the mail that was tried to be sent */

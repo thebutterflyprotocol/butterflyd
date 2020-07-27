@@ -26,9 +26,11 @@ void main()
 	/* Construct the listeners form the config file */
 	ButterflyListener[] listeners = constructListeners(config["listeners"]);
 
-	/* Start the server */
-	//Address address = parseAddress(config["address"].str(), to!(ushort)(config["port"].str()));
+	/* Create the server */
 	ButterflyServer server = new ButterflyServer(listeners);
+
+	/* Start the server */
+	server.run();
 }
 
 private ButterflyListener[] constructListeners(JSONValue listenersBlock)

@@ -19,14 +19,16 @@ public abstract class ButterflyListener : Thread
         this.domain = domain;
     }
 
-    public abstract void run()
-    {
-
-    }
+    public abstract void run();
 
     public void setServer(ButterflyServer server)
     {
         this.server = server;
+    }
+
+    public ButterflyServer getServer()
+    {
+        return server;
     }
 
     public string getName()

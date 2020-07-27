@@ -4,6 +4,7 @@ import core.thread : Thread;
 import server.listener : ButterflyListener;
 import std.socket : Socket, Address, SocketType, ProtocolType;
 import std.json : JSONValue;
+import client.client;
 
 public class IPv4Listener : ButterflyListener
 {
@@ -27,6 +28,18 @@ public class IPv4Listener : ButterflyListener
 
     public override void run()
     {
+        serverSocket.listen(1); //TODO: backlog
 
+        while(true)
+        {
+            /* Accept the queued connection */
+            Socket clientConnection = serverSocket.accept();
+
+
+            ButterflyClient client = new ButterflyClient();
+
+            /* Start the client handler */
+            butterflyClient.start();
+        }
     }
 }
