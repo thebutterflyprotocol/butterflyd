@@ -245,7 +245,7 @@ public final class ButterflyClient : Thread
                         /* Make sure the connection is from a client */
                         if(connectionType == ClientType.CLIENT)
                         {
-                            /* TODO: Implement me */
+                            /* Create the new folder */
                             createFolder(commandBlock["request"]["folderName"].str());
                         }
                         else
@@ -269,7 +269,25 @@ public final class ButterflyClient : Thread
                             /* TODO: Add error handling */
                         }
                     }
-                    else if(cmp(command, "addToFolder") == 0)
+                    else if(cmp(command, "deleteMail") == 0)
+                    {
+                        /* Make sure the connection is from a client */
+                        if(connectionType == ClientType.CLIENT)
+                        {
+							/* The folder the mail wanting to be deleted resides in */
+							Folder mailDirectory = new Folder(mailbox, commandBlock["request"]["folder"].str());
+
+                            /* The mail message to be deleted */
+                            Mail mailToDelete = new Mail(mailbox, mailDirectory, commandBlock["request"]["mailID"].str());
+                            
+                            mailToDelete.deleteMessage();
+                        }
+                        else
+                        {
+                            /* TODO: Add error handling */
+                        }
+                    }
+                    else if(cmp(command, "moveFolder") == 0)
                     {
                         /* Make sure the connection is from a client */
                         if(connectionType == ClientType.CLIENT)
@@ -281,12 +299,22 @@ public final class ButterflyClient : Thread
                             /* TODO: Add error handling */
                         }
                     }
-                    else if(cmp(command, "removeFromFolder") == 0)
+                    else if(cmp(command, "moveMail") == 0)
                     {
                         /* Make sure the connection is from a client */
                         if(connectionType == ClientType.CLIENT)
                         {
-                            /* TODO: Implement me */
+                            /* The folder of the original mail message */
+                            Folder originalMessageFolder = new Folder(mailbox, commandBlock["request"]["originalFolder"].str());
+                            
+                            /* The original mail message */
+                            Mail originalMailMessage = new Mail(mailbox, originalMessageFolder, commandBlock["request"]["mailID"].str());
+                            
+                            /* The folder to move the mail message to */
+                            Folder newMailFolder = new Folder(mailbox, commandBlock["request"]["newFolder"].str());
+                            
+                            /* Move mail message */
+                            moveMail(originalMessageFolder, originalMailMessage, newMailFolder);
                         }
                         else
                         {
@@ -347,7 +375,6 @@ public final class ButterflyClient : Thread
                     status = -1;
                     message = e.msg;
                 }
-                
                 catch(ErrnoException e)
                 {
                     /* Status=-1 :: I/O error */
@@ -397,6 +424,20 @@ public final class ButterflyClient : Thread
         clientSocket.close();
     }
 
+
+	/**
+	 * Moves message from one folder, `srcFolder`, to another folder,
+	 * `dstFolder`.
+	 */
+	private void moveMail(Folder srcFolder, Mail ogMessage, Folder dstFolder)
+	{
+		/* Store a copy of the message in the destination folder `dstFolder` */
+		storeMail(dstFolder, ogMessage.getMessage());
+		
+		/* Delete the original message */
+		ogMessage.deleteMessage();
+	}
+
     /**
     * Stores a mail message in the users Mailbox
     * at in the given Folder, `folder`.
@@ -418,7 +459,7 @@ public final class ButterflyClient : Thread
 		Mail updatedMail;
 		
 		/* Delete the old message */
-		mailbox.deleteMessage(storeFolder, messageOriginal.getMailID());
+		messageOriginal.deleteMessage();
 		
 		/* Store the new message in the same folder */
 		updatedMail = Mail.createMail(mailbox, storeFolder, mailBlock);

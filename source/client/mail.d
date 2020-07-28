@@ -94,8 +94,10 @@ public final class Mailbox
 
 	/**
 	 * Deletes the given message in the given folder path
+	 * 
+	 * TODO: remove me
 	 */
-    public void deleteMessage(Folder folder, string mailID)
+    public void deletejjjMessage(Folder folder, string mailID)
     {
         /* Generate the filename to store the message under */
         string filename = "mailboxes/"~username~"/"~folder.folderPath~"/"~mailID;
@@ -325,22 +327,34 @@ public final class Mail
         this.mailID = mailID;
     }
 
-    private void deleteMessage()
+	/**
+	 * Removes the mail message from the folder
+	 */
+    public void deleteMessage()
     {
         /* Get the file system path to this message */
         string messageFilePath = mailbox.username~"/"~folder.folderPath~"/"~mailID;
 
+		/* Remove the message from the filesystem */
         remove(messageFilePath);
     }
 
     private void sanityCheck()
     {
         /* TODO: Throw error if the message is somehow malformed */
+        
+        /**
+         * Check for `from` field
+         * Check for `to` field
+         */
     }
 
 
     
 
+	/**
+	 * Returns the mail message JSON
+	 */
     public JSONValue getMessage()
     {
         JSONValue messageBlock;
