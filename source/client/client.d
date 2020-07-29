@@ -317,7 +317,12 @@ public final class ButterflyClient : Thread
                             Folder newMailFolder = new Folder(mailbox, commandBlock["request"]["newFolder"].str());
                             
                             /* Move mail message */
-                            moveMail(originalMessageFolder, originalMailMessage, newMailFolder);
+                            Mail newMail = moveMail(originalMessageFolder, originalMailMessage, newMailFolder);
+                            
+                            /* Set the response */
+                            JSONValue response;
+                            response["mailID"] = newMail.getMailID();
+                            responseBlock["response"] = response;
                         }
                         else
                         {
@@ -432,13 +437,15 @@ public final class ButterflyClient : Thread
 	 * Moves message from one folder, `srcFolder`, to another folder,
 	 * `dstFolder`.
 	 */
-	private void moveMail(Folder srcFolder, Mail ogMessage, Folder dstFolder)
+	private Mail moveMail(Folder srcFolder, Mail ogMessage, Folder dstFolder)
 	{
 		/* Store a copy of the message in the destination folder `dstFolder` */
-		storeMail(dstFolder, ogMessage.getMessage());
+		Mail newMessage = storeMail(dstFolder, ogMessage.getMessage());
 		
 		/* Delete the original message */
 		ogMessage.deleteMessage();
+		
+		return newMessage;
 	}
 
     /**
