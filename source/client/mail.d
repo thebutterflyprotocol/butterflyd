@@ -238,7 +238,7 @@ public final class Folder
         mkdir("mailboxes/"~mailbox.username~"/"~folderPath~"/"~folderName);
 
 		/* Create an instance of the newly created folder */
-        newFolder = new Folder(mailbox, this, folderName);
+        newFolder = new Folder(mailbox, folderPath~"/"~folderName);
 
 
         return newFolder;
