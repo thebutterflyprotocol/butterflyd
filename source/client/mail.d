@@ -70,11 +70,10 @@ public final class Mailbox
     {
         Folder newFolder;
 
-        /* TODO: Implement folder creation */
-
+        /* Create the directory */
         mkdir("mailboxes/"~username~"/"~folderName);
 
-        // newFolder = new Folder(this, null, folderName);
+        newFolder = new Folder(this, folderName);
 
         return newFolder;
     }
@@ -137,6 +136,8 @@ public final class Folder
     *
     * The Mailbox is specified by `mailbox` and the location
     * of the folder within the mailbox by `folderPath`.
+    * 
+    * TODO: DIsallow simply empty folder name (somewhere)
     */
     this(Mailbox mailbox, string folderPath)
     {
