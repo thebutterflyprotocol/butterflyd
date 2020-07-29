@@ -55,6 +55,12 @@ public final class Mailbox
     {
         Folder[] folders;
 
+		/* Get a list of all the directories within this directory */
+        foreach(DirEntry dirEntry; dirEntries("mailboxes/"~username~"/", SpanMode.shallow))
+        {
+            folders ~= new Folder(this, dirEntry.name());
+        }
+
         /* TODO: Implement me */
 
         return folders;
@@ -218,7 +224,7 @@ public final class Folder
 		}
 		
         /* Delete this folder */
-        rmdir(folderPath);
+        rmdir("mailboxes/"~mailbox.username~"/"~folderPath);
     }
 
     /**
