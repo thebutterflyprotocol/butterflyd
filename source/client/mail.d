@@ -61,8 +61,6 @@ public final class Mailbox
             folders ~= new Folder(this, dirEntry.name());
         }
 
-        /* TODO: Implement me */
-
         return folders;
     }
 
