@@ -237,9 +237,8 @@ public final class Folder
 		/* Create the folder in the filesystem */
         mkdir("mailboxes/"~mailbox.username~"/"~folderPath~"/"~folderName);
 
-		/* TODO: Re-enable */
 		/* Create an instance of the newly created folder */
-        // newFolder = new Folder(mailbox, this, folderName);
+        newFolder = new Folder(mailbox, this, folderName);
 
 
         return newFolder;
