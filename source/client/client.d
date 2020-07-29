@@ -371,6 +371,7 @@ public final class ButterflyClient : Thread
                     /* TODO: Set error message and status code */
                     status = -2;
                     message = e.msg;
+                    writeln(e);
                 }
                 catch(FileException e)
                 {
