@@ -31,13 +31,6 @@ public final class Mailbox
     {
         Mailbox newMailbox;
 
-        
-        
-
-        /* TODO: Implement me */
-
-        /* TODO: Create folder for mailbox as `mailboxes/<username>` */
-
         /* Create the mailbox directory */
         mkdir("mailboxes/"~username); /* TODO: Error handling */
 
@@ -92,19 +85,7 @@ public final class Mailbox
         mailFile.close();
     }
 
-	/**
-	 * Deletes the given message in the given folder path
-	 * 
-	 * TODO: remove me
-	 */
-    public void deletejjjMessage(Folder folder, string mailID)
-    {
-        /* Generate the filename to store the message under */
-        string filename = "mailboxes/"~username~"/"~folder.folderPath~"/"~mailID;
-
-		/* Delete the mail message */
-		remove(filename);
-    }
+	
 
     public void deleteMailbox()
     {
@@ -247,10 +228,11 @@ public final class Folder
     {
         Folder newFolder;
 
-        /* TODO: Create here */
-
+		/* Create the folder in the filesystem */
         mkdir("mailboxes/"~mailbox.username~"/"~folderPath~"/"~folderName);
 
+		/* TODO: Re-enable */
+		/* Create an instance of the newly created folder */
         // newFolder = new Folder(mailbox, this, folderName);
 
 
