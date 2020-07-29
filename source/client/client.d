@@ -338,7 +338,9 @@ public final class ButterflyClient : Thread
                             Folder listFolder = new Folder(mailbox, commandBlock["request"]["folderName"].str());
 
                             /* Write back an array of mailIDs */
-                            responseBlock["mailIDs"] = parseJSON(to!(string)(listFolder.getMessages()));
+                            JSONValue response;
+                            response["mailIDs"] = parseJSON(to!(string)(listFolder.getMessages()));
+                            responseBlock["response"] = response;
                         }
                         else
                         {
@@ -353,8 +355,10 @@ public final class ButterflyClient : Thread
                             /* Get the folder wanting to be listed */
                             Folder listFolder = new Folder(mailbox, commandBlock["request"]["folderName"].str());
 
-                            /* Write back an array of folder names */
-                            responseBlock["folders"] = parseJSON(to!(string)(listFolder.getFolders()));
+							/* Write back an array of folder names */
+                            JSONValue response;
+                            response["folders"] = parseJSON(to!(string)(listFolder.getFolders()));
+                            responseBlock["response"] = response;
                         }
                         else
                         {
