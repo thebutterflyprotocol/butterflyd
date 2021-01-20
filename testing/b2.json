@@ -1,0 +1,17 @@
+{
+    "listeners" : {
+        "enabled" : ["listener1"],
+        "listener1" : {
+            "type" : "ipv4",
+            "domain" : "10.1.0.4:2222",
+            "address" : "0.0.0.0",
+            "port" : "6969"
+        },
+        "listener2" : {
+            "type" : "ipv6",
+            "domain" : "10.1.0.4:2222",
+            "address" : "::",
+            "port" : "6969"
+        }
+    }
+}
