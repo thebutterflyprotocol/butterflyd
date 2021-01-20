@@ -2,7 +2,7 @@ module server.listeners;
 
 import core.thread : Thread;
 import server.listener : ButterflyListener;
-import std.socket : Socket, Address, SocketType, ProtocolType, parseAddress;
+import std.socket : Socket, Address, SocketType, ProtocolType, parseAddress, AddressFamily;
 import std.json : JSONValue;
 import client.client;
 import std.conv : to;
@@ -20,14 +20,21 @@ public class IPv4Listener : ButterflyListener
 
         Address bindAddress = parseAddress(config["address"].str(), to!(ushort)(config["port"].str()));
 
-        /**
-        * Instantiate a new Socket for the given Address
-        * `bindAddress` of which it will bind to.
-        */
-        serverSocket = new Socket(bindAddress.addressFamily, SocketType.STREAM, ProtocolType.TCP);
-        serverSocket.bind(bindAddress);
-
-        
+		/* TODO: Throw an exception if not IPv4 */
+		if(bindAddress.addressFamily() == AddressFamily.INET)
+		{
+			/**
+			* Instantiate a new Socket for the given Address
+			* `bindAddress` of which it will bind to.
+			*/
+			serverSocket = new Socket(AddressFamily.INET, SocketType.STREAM, ProtocolType.TCP);
+			serverSocket.bind(bindAddress);
+		}	
+		else
+		{
+			/* TODO: Throw an exception if not IPv4 */
+		}
+            
     }
 
     public override void run()
@@ -60,14 +67,20 @@ public class IPv6Listener : ButterflyListener
 
         Address bindAddress = parseAddress(config["address"].str(), to!(ushort)(config["port"].str()));
 
-        /**
-        * Instantiate a new Socket for the given Address
-        * `bindAddress` of which it will bind to.
-        */
-        serverSocket = new Socket(bindAddress.addressFamily, SocketType.STREAM, ProtocolType.TCP);
-        serverSocket.bind(bindAddress);
-
-        
+		/* TODO: Throw an exception if not IPv6 */
+		if(bindAddress.addressFamily() == AddressFamily.INET6)
+		{
+			/**
+			* Instantiate a new Socket for the given Address
+			* `bindAddress` of which it will bind to.
+			*/
+			serverSocket = new Socket(AddressFamily.INET6, SocketType.STREAM, ProtocolType.TCP);
+			serverSocket.bind(bindAddress);
+		}	
+		else
+		{
+			/* TODO: Throw an exception if not IPv6 */
+		} 
     }
 
     public override void run()
