@@ -174,7 +174,7 @@ public final class ButterflyClient : Thread
 
 							/* Set the response to be the mail message's ID */
 							JSONValue response;
-							response["mailID"] =storedMail.getMailID();
+							response["mailID"] = storedMail.getMailID();
                             responseBlock["response"] = response;
                         }
                         else
