@@ -77,11 +77,11 @@ public final class ButterflyClient : Thread
         /* TODO: Implement loop read-write here */
         while(active)
         {
-            writeln("Awaiting command from client...");
+            gprintln("Awaiting command from client...");
 
             /* Await a message from the client */
             bool recvStatus = receiveMessage(clientSocket, receivedBytes);
-            writeln(recvStatus);
+            gprintln(recvStatus);
 
             /* If the receive succeeded */
             if(recvStatus)
@@ -97,7 +97,7 @@ public final class ButterflyClient : Thread
                 {
                     /* Parse the incoming JSON */
                     commandBlock = parseJSON(cast(string)receivedBytes);
-                    writeln("Received response: "~commandBlock.toPrettyString());
+                    gprintln("Received response: "~commandBlock.toPrettyString());
 
                     /* Get the command */
                     string command = commandBlock["command"].str();
@@ -409,15 +409,15 @@ public final class ButterflyClient : Thread
                 responseBlock["status"] = statusBlock;
 
                 /* Write the response block to the client */
-                writeln("Writing back response: "~responseBlock.toPrettyString());
+                gprintln("Writing back response: "~responseBlock.toPrettyString());
                 bool sendStatus = sendMessage(clientSocket, cast(byte[])toJSON(responseBlock));
-                writeln(sendStatus);
+                gprintln(sendStatus);
 
                 /* If there was an error writing the response back */
                 if(!sendStatus)
                 {
                     /* End the session */
-                    writeln("Response write back failed");
+                    gprintln("Response write back failed");
                     break;
                 }
             }
@@ -430,7 +430,7 @@ public final class ButterflyClient : Thread
             }
         }
 
-        writeln("Closing session...");
+        gprintln("Closing session...");
 
         /* Close the socket */
         clientSocket.close();
@@ -595,7 +595,7 @@ public final class ButterflyClient : Thread
             */
             if(cmp(domain, listener.getDomain()) == 0)
             {
-                writeln("Storing mail message to "~recipient~" ...");
+                gprintln("Storing mail message to "~recipient~" ...");
 
                 /* Get the Mailbox of a given user */
                 Mailbox userMailbox = new Mailbox(username);
@@ -606,7 +606,7 @@ public final class ButterflyClient : Thread
                 /* Store the message in their Inbox folder */
                 Mail.createMail(userMailbox, inboxFolder, mailBlock);
 
-                writeln("Stored mail message");
+                gprintln("Stored mail message");
             }
         }
     }
@@ -662,7 +662,7 @@ public final class ButterflyClient : Thread
         /* Send the mail to each of the recipients */
         foreach(string recipient; recipients)
         {
-            writeln("Sending mail message to "~recipient~" ...");
+            gprintln("Sending mail message to "~recipient~" ...");
 
             /* Get the mail address */
             string[] mailAddress = split(recipient, "@");
@@ -679,7 +679,7 @@ public final class ButterflyClient : Thread
             */
             if(listener.getServer().isLocalDomain(domain))
             {
-                writeln("Local delivery occurring...");
+                gprintln("Local delivery occurring...");
 
                 /* TODO: Add failed delivery here too */
                 if(!Mailbox.isMailbox(username))
@@ -708,7 +708,7 @@ public final class ButterflyClient : Thread
             else
             {
                 /* TODO: Do remote mail delivery */
-                writeln("Remote delivery occurring...");
+                gprintln("Remote delivery occurring...");
 
                 try
                 {
@@ -754,7 +754,7 @@ public final class ButterflyClient : Thread
                     /* TODO: Get ["status"]["code"] code here an act on it */
                     if(responseBlock["status"]["code"].integer() == 0)
                     {
-                        writeln("Message delivered to user "~recipient);
+                        gprintln("Message delivered to user "~recipient);
                     }
                     else
                     {
@@ -769,7 +769,7 @@ public final class ButterflyClient : Thread
                 {
                     /* When delivery fails */
                     deliveryFailed:
-                        writeln("Error delivering to "~recipient);
+                        gprintln("Error delivering to "~recipient);
 
                         /* Append failed recipient to array of failed recipients */
                         failedRecipients ~= recipient;
@@ -778,10 +778,10 @@ public final class ButterflyClient : Thread
                 }
             }
 
-            writeln("Sent mail message to "~recipient);
+            gprintln("Sent mail message to "~recipient);
         }
 
-        writeln("Mail delivered");
+        gprintln("Mail delivered");
 
         /**
         * If there are failed sends then send an error message
@@ -799,12 +799,12 @@ public final class ButterflyClient : Thread
             errorMessage ~= "\nThe message was:\n\n"~mailBlock.toPrettyString();
             deliveryReport["message"] = errorMessage;
 
-            writeln(deliveryReport);
+            gprintln(deliveryReport);
 
             /* Deliver the error message */
             sendMail(deliveryReport);
 
-            writeln("Mail delivery report sent: "~deliveryReport.toPrettyString());
+            gprintln("Mail delivery report sent: "~deliveryReport.toPrettyString());
         }
 
 
@@ -814,6 +814,6 @@ public final class ButterflyClient : Thread
         /* Store the message in their Inbox folder */
         Mail.createMail(mailbox, sentFolder, mailBlock);
 
-        writeln("Saved mail message to sent folder");
+        gprintln("Saved mail message to sent folder");
     }
 }
