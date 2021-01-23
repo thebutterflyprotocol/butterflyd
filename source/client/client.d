@@ -21,7 +21,7 @@ public final class ButterflyClient : Thread
     /**
     * The associated listener
     */
-    private ButterflyListener listener;
+    public ButterflyListener listener;
 
     /**
     * Socket of the client connection
@@ -48,7 +48,7 @@ public final class ButterflyClient : Thread
     * The Mailbox (if client) of the connected
     * user.
     */
-    private Mailbox mailbox;
+    public Mailbox mailbox;
 
     this(ButterflyListener listener, Socket clientSocket)
     {
@@ -638,7 +638,7 @@ public final class ButterflyClient : Thread
     * Sends the mail message `mail` to the servers
     * listed in the recipients field.
     */
-    private void sendMail(JSONValue mailBlock)
+    public void sendMail(JSONValue mailBlock)
     {
         /* Filter the mail */
         bool reject = filterMailOutgoing(&mailBlock);
@@ -659,6 +659,9 @@ public final class ButterflyClient : Thread
 
         /* List of server's failed to deliver to */
         string[] failedRecipients;
+
+        /* List of remote recipients */
+        string[] remoteRecipients;
 
         /* Send the mail to each of the recipients */
         foreach(string recipient; recipients)
@@ -685,7 +688,9 @@ public final class ButterflyClient : Thread
                 /* TODO: Add failed delivery here too */
                 if(!Mailbox.isMailbox(username))
                 {
-                    goto deliveryFailed;
+                    /* Append failed recipient to array of failed recipients */
+                    failedRecipients ~= recipient;
+                    continue;
                 }
 
                 /* Get the Mailbox of a given user */
@@ -708,105 +713,22 @@ public final class ButterflyClient : Thread
             }
             else
             {
-                /* TODO: Do remote mail delivery */
-                gprintln("Remote delivery occurring...");
-
-                try
-                {
-                    /**
-                    * Construct the server message to send to the
-                    * remote server.
-                    */
-                    JSONValue messageBlock;
-                    messageBlock["command"] = "deliverMail";
-
-                    JSONValue requestBlock;
-                    requestBlock["mail"] = mailBlock;
-                    messageBlock["request"] = requestBlock;
-
-                    /* Deliver the mail to the remote server */
-                    Socket remoteServer = new Socket(AddressFamily.INET, SocketType.STREAM, ProtocolType.TCP);
-                    
-                    /* TODO: Add check over here to make sure these are met */
-                    string remoteHost = split(domain, ":")[0];
-                    ushort remotePort = to!(ushort)(split(domain, ":")[1]);
-
-                    remoteServer.connect(parseAddress(remoteHost, remotePort));
-                    bool sendStatus = sendMessage(remoteServer, cast(byte[])toJSON(messageBlock));
-
-                    if(!sendStatus)
-                    {
-                        goto deliveryFailed;
-                    }
-
-                    byte[] receivedBytes;
-                    bool recvStatus = receiveMessage(remoteServer, receivedBytes);
-
-                    if(!recvStatus)
-                    {
-                        goto deliveryFailed;
-                    }
-
-                    /* Close the connection with the remote host */
-                    remoteServer.close();
-
-                    JSONValue responseBlock = parseJSON(cast(string)receivedBytes);
-
-                    /* TODO: Get ["status"]["code"] code here an act on it */
-                    if(responseBlock["status"]["code"].integer() == 0)
-                    {
-                        gprintln("Message delivered to user "~recipient);
-                    }
-                    else
-                    {
-                        goto deliveryFailed;
-                    }                    
-                }
-                catch(SocketOSException)
-                {
-                    goto deliveryFailed;
-                }     
-                catch(JSONException)
-                {
-                    /* When delivery fails */
-                    deliveryFailed:
-                        gprintln("Error delivering to "~recipient);
-
-                        /* Append failed recipient to array of failed recipients */
-                        failedRecipients ~= recipient;
-
-                        continue;
-                }
+                /* Tally up all non-local recipients for off-thread delivery */
+                remoteRecipients ~= recipient;
             }
-
-            gprintln("Sent mail message to "~recipient);
         }
 
-        gprintln("Mail delivered");
+
+        import client.sender : MailSender;
 
         /**
-        * If there are failed sends then send an error message
-        * to the sender.
+        * Create a new MailSender for delivering remote mail
+        * off of this thread
         */
-        if(failedRecipients.length)
-        {
-            /* Create the error message */
-            JSONValue deliveryReport;
-            JSONValue[] errorRecipients = [JSONValue(mailbox.username~"@"~listener.getDomain())];
-            deliveryReport["recipients"] = errorRecipients;
+        MailSender remoteMailSender = new MailSender(remoteRecipients, mailBlock, failedRecipients, this);
 
-            /* TODO: Make more indepth, and have copy of the mail that was tried to be sent */
-            string errorMessage = "There was an error delivery the mail to: "~to!(string)(recipients)~"\n";
-            errorMessage ~= "\nThe message was:\n\n"~mailBlock.toPrettyString();
-            deliveryReport["message"] = errorMessage;
 
-            gprintln(deliveryReport);
-
-            /* Deliver the error message */
-            sendMail(deliveryReport);
-
-            gprintln("Mail delivery report sent: "~deliveryReport.toPrettyString());
-        }
+        gprintln("Mail delivered (there may be remote mail delivery ongoing)");
 
 
         /* Store the message in this user's "Sent" folder */
