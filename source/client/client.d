@@ -1,7 +1,8 @@
 module client.client;
 
 import core.thread : Thread;
-import std.socket : Socket, AddressFamily, SocketType, ProtocolType, parseAddress, Address, SocketOSException;
+import std.socket : Socket, AddressFamily, SocketType, ProtocolType,
+    parseAddress, Address, SocketOSException;
 import bmessage;
 import std.stdio;
 import std.json;
@@ -76,7 +77,7 @@ public final class ButterflyClient : Thread
         */
 
         /* TODO: Implement loop read-write here */
-        while(active)
+        while (active)
         {
             gprintln("Awaiting command from client...");
 
@@ -85,7 +86,7 @@ public final class ButterflyClient : Thread
             gprintln(recvStatus);
 
             /* If the receive succeeded */
-            if(recvStatus)
+            if (recvStatus)
             {
                 /* Reset the response JSON */
                 responseBlock = JSONValue();
@@ -97,29 +98,29 @@ public final class ButterflyClient : Thread
                 try
                 {
                     /* Parse the incoming JSON */
-                    commandBlock = parseJSON(cast(string)receivedBytes);
-                    gprintln("Received response: "~commandBlock.toPrettyString());
+                    commandBlock = parseJSON(cast(string) receivedBytes);
+                    gprintln("Received response: " ~ commandBlock.toPrettyString());
 
                     /* Get the command */
                     string command = commandBlock["command"].str();
 
                     /* TODO: Add command handling here */
-                    if(cmp(command, "authenticate") == 0)
+                    if (cmp(command, "authenticate") == 0)
                     {
                         /* Get the username and password */
-                        string authUsername = commandBlock["request"]["username"].str(); 
+                        string authUsername = commandBlock["request"]["username"].str();
                         string authPassword = commandBlock["request"]["password"].str();
 
                         /* TODO: Implement authentication */
                         bool authStatus = authenticate(authUsername, authPassword);
 
-                        if(authStatus)
+                        if (authStatus)
                         {
                             /**
                             * If the auth if successful then upgrade to
                             * a client-type connection.
                             */
-                            connectionType = ClientType.CLIENT;   
+                            connectionType = ClientType.CLIENT;
 
                             /**
                             * Set the user's associated Mailbox up
@@ -132,19 +133,19 @@ public final class ButterflyClient : Thread
                         }
                     }
                     /* TODO: Add command handling here */
-                    else if(cmp(command, "register") == 0)
+            else if (cmp(command, "register") == 0)
                     {
                         /* Get the username and password */
-                        string regUsername = commandBlock["request"]["username"].str(); 
+                        string regUsername = commandBlock["request"]["username"].str();
                         string regPassword = commandBlock["request"]["password"].str();
 
                         /* Attempt to register the new account */
                         register(regUsername, regPassword);
                     }
-                    else if(cmp(command, "sendMail") == 0)
+                    else if (cmp(command, "sendMail") == 0)
                     {
                         /* Make sure the connection is from a client */
-                        if(connectionType == ClientType.CLIENT)
+                        if (connectionType == ClientType.CLIENT)
                         {
                             /* TODO: Implement me */
 
@@ -159,23 +160,24 @@ public final class ButterflyClient : Thread
                             /* TODO: Add error handling */
                         }
                     }
-                    else if(cmp(command, "storeMail") == 0)
+                    else if (cmp(command, "storeMail") == 0)
                     {
                         /* Make sure the connection is from a client */
-                        if(connectionType == ClientType.CLIENT)
+                        if (connectionType == ClientType.CLIENT)
                         {
                             /* Get the mail block */
                             JSONValue mailBlock = commandBlock["request"]["mail"];
 
                             /* Get the folder to store the mail message in */
-                            Folder storeFolder = new Folder(mailbox, commandBlock["request"]["folder"].str());
-                        
+                            Folder storeFolder = new Folder(mailbox,
+                                    commandBlock["request"]["folder"].str());
+
                             /* Store the message in the mailbox */
                             Mail storedMail = storeMail(storeFolder, mailBlock);
 
-							/* Set the response to be the mail message's ID */
-							JSONValue response;
-							response["mailID"] = storedMail.getMailID();
+                            /* Set the response to be the mail message's ID */
+                            JSONValue response;
+                            response["mailID"] = storedMail.getMailID();
                             responseBlock["response"] = response;
                         }
                         else
@@ -183,19 +185,21 @@ public final class ButterflyClient : Thread
                             /* TODO: Add error handling */
                         }
                     }
-                    else if(cmp(command, "editMail") == 0)
+                    else if (cmp(command, "editMail") == 0)
                     {
                         /* Make sure the connection is from a client */
-                        if(connectionType == ClientType.CLIENT)
+                        if (connectionType == ClientType.CLIENT)
                         {
                             /* Get the mail block */
                             JSONValue mailBlock = commandBlock["request"]["mail"];
 
-							/* Get the folder the mail message wanting to be edited resides in */
-                            Folder storeFolder = new Folder(mailbox, commandBlock["request"]["folder"].str());
+                            /* Get the folder the mail message wanting to be edited resides in */
+                            Folder storeFolder = new Folder(mailbox,
+                                    commandBlock["request"]["folder"].str());
 
-							/* Get the mail message wanting to be edited */
-							Mail messageOriginal = new Mail(mailbox, storeFolder, commandBlock["request"]["mailID"].str());
+                            /* Get the mail message wanting to be edited */
+                            Mail messageOriginal = new Mail(mailbox, storeFolder,
+                                    commandBlock["request"]["mailID"].str());
 
                             /* Update the message with the new data */
                             Mail updatedMail = editMail(messageOriginal, storeFolder, mailBlock);
@@ -207,10 +211,10 @@ public final class ButterflyClient : Thread
                             /* TODO: Add error handling */
                         }
                     }
-                    else if(cmp(command, "deliverMail") == 0)
+                    else if (cmp(command, "deliverMail") == 0)
                     {
                         /* Make sure the connection is from a server */
-                        if(connectionType == ClientType.SERVER)
+                        if (connectionType == ClientType.SERVER)
                         {
                             /* Deliver the mail message from the remote host */
                             deliverMail(commandBlock["request"]["mail"]);
@@ -220,13 +224,14 @@ public final class ButterflyClient : Thread
                             /* TODO: Add error handling */
                         }
                     }
-                    else if(cmp(command, "fetchMail") == 0)
+                    else if (cmp(command, "fetchMail") == 0)
                     {
                         /* Make sure the connection is from a client */
-                        if(connectionType == ClientType.CLIENT)
+                        if (connectionType == ClientType.CLIENT)
                         {
                             /* The folder where the mail message is stored */
-                            Folder fetchFolder = new Folder(mailbox, commandBlock["request"]["folder"].str());
+                            Folder fetchFolder = new Folder(mailbox,
+                                    commandBlock["request"]["folder"].str());
 
                             /* The mail ID of the mail message */
                             string mailID = commandBlock["request"]["id"].str();
@@ -244,10 +249,10 @@ public final class ButterflyClient : Thread
                             /* TODO: Add error handling */
                         }
                     }
-                    else if(cmp(command, "createFolder") == 0)
+                    else if (cmp(command, "createFolder") == 0)
                     {
                         /* Make sure the connection is from a client */
-                        if(connectionType == ClientType.CLIENT)
+                        if (connectionType == ClientType.CLIENT)
                         {
                             /* Create the new folder */
                             createFolder(commandBlock["request"]["folderName"].str());
@@ -257,14 +262,15 @@ public final class ButterflyClient : Thread
                             /* TODO: Add error handling */
                         }
                     }
-                    else if(cmp(command, "deleteFolder") == 0)
+                    else if (cmp(command, "deleteFolder") == 0)
                     {
                         /* Make sure the connection is from a client */
-                        if(connectionType == ClientType.CLIENT)
+                        if (connectionType == ClientType.CLIENT)
                         {
                             /* The folder to be deleted */
-                            Folder deleteFolder = new Folder(mailbox, commandBlock["request"]["folder"].str());
-                            
+                            Folder deleteFolder = new Folder(mailbox,
+                                    commandBlock["request"]["folder"].str());
+
                             /* Delete the folder */
                             deleteFolder.deleteFolder();
                         }
@@ -273,17 +279,19 @@ public final class ButterflyClient : Thread
                             /* TODO: Add error handling */
                         }
                     }
-                    else if(cmp(command, "deleteMail") == 0)
+                    else if (cmp(command, "deleteMail") == 0)
                     {
                         /* Make sure the connection is from a client */
-                        if(connectionType == ClientType.CLIENT)
+                        if (connectionType == ClientType.CLIENT)
                         {
-							/* The folder the mail wanting to be deleted resides in */
-							Folder mailDirectory = new Folder(mailbox, commandBlock["request"]["folder"].str());
+                            /* The folder the mail wanting to be deleted resides in */
+                            Folder mailDirectory = new Folder(mailbox,
+                                    commandBlock["request"]["folder"].str());
 
                             /* The mail message to be deleted */
-                            Mail mailToDelete = new Mail(mailbox, mailDirectory, commandBlock["request"]["mailID"].str());
-                            
+                            Mail mailToDelete = new Mail(mailbox, mailDirectory,
+                                    commandBlock["request"]["mailID"].str());
+
                             mailToDelete.deleteMessage();
                         }
                         else
@@ -291,10 +299,10 @@ public final class ButterflyClient : Thread
                             /* TODO: Add error handling */
                         }
                     }
-                    else if(cmp(command, "moveFolder") == 0)
+                    else if (cmp(command, "moveFolder") == 0)
                     {
                         /* Make sure the connection is from a client */
-                        if(connectionType == ClientType.CLIENT)
+                        if (connectionType == ClientType.CLIENT)
                         {
                             /* TODO: Implement me */
                         }
@@ -303,23 +311,27 @@ public final class ButterflyClient : Thread
                             /* TODO: Add error handling */
                         }
                     }
-                    else if(cmp(command, "moveMail") == 0)
+                    else if (cmp(command, "moveMail") == 0)
                     {
                         /* Make sure the connection is from a client */
-                        if(connectionType == ClientType.CLIENT)
+                        if (connectionType == ClientType.CLIENT)
                         {
                             /* The folder of the original mail message */
-                            Folder originalMessageFolder = new Folder(mailbox, commandBlock["request"]["originalFolder"].str());
-                            
+                            Folder originalMessageFolder = new Folder(mailbox,
+                                    commandBlock["request"]["originalFolder"].str());
+
                             /* The original mail message */
-                            Mail originalMailMessage = new Mail(mailbox, originalMessageFolder, commandBlock["request"]["mailID"].str());
-                            
+                            Mail originalMailMessage = new Mail(mailbox,
+                                    originalMessageFolder, commandBlock["request"]["mailID"].str());
+
                             /* The folder to move the mail message to */
-                            Folder newMailFolder = new Folder(mailbox, commandBlock["request"]["newFolder"].str());
-                            
+                            Folder newMailFolder = new Folder(mailbox,
+                                    commandBlock["request"]["newFolder"].str());
+
                             /* Move mail message */
-                            Mail newMail = moveMail(originalMessageFolder, originalMailMessage, newMailFolder);
-                            
+                            Mail newMail = moveMail(originalMessageFolder,
+                                    originalMailMessage, newMailFolder);
+
                             /* Set the response */
                             JSONValue response;
                             response["mailID"] = newMail.getMailID();
@@ -330,13 +342,14 @@ public final class ButterflyClient : Thread
                             /* TODO: Add error handling */
                         }
                     }
-                    else if(cmp(command, "listMail") == 0)
+                    else if (cmp(command, "listMail") == 0)
                     {
                         /* Make sure the connection is from a client */
-                        if(connectionType == ClientType.CLIENT)
+                        if (connectionType == ClientType.CLIENT)
                         {
                             /* Get the folder wanting to be listed */
-                            Folder listFolder = new Folder(mailbox, commandBlock["request"]["folderName"].str());
+                            Folder listFolder = new Folder(mailbox,
+                                    commandBlock["request"]["folderName"].str());
 
                             /* Write back an array of mailIDs */
                             JSONValue response;
@@ -348,15 +361,16 @@ public final class ButterflyClient : Thread
                             /* TODO: Add error handling */
                         }
                     }
-                    else if(cmp(command, "listFolder") == 0)
+                    else if (cmp(command, "listFolder") == 0)
                     {
                         /* Make sure the connection is from a client */
-                        if(connectionType == ClientType.CLIENT)
+                        if (connectionType == ClientType.CLIENT)
                         {
                             /* Get the folder wanting to be listed */
-                            Folder listFolder = new Folder(mailbox, commandBlock["request"]["folderName"].str());
+                            Folder listFolder = new Folder(mailbox,
+                                    commandBlock["request"]["folderName"].str());
 
-							/* Write back an array of folder names */
+                            /* Write back an array of folder names */
                             JSONValue response;
                             response["folders"] = parseJSON(to!(string)(listFolder.getFolders()));
                             responseBlock["response"] = response;
@@ -366,7 +380,7 @@ public final class ButterflyClient : Thread
                             /* TODO: Add error handling */
                         }
                     }
-                    else if(cmp(command, "totsiens") == 0)
+                    else if (cmp(command, "totsiens") == 0)
                     {
                         /* Close the connection on next loop condition check */
                         active = false;
@@ -376,25 +390,25 @@ public final class ButterflyClient : Thread
                         /* TODO: Add error handling for invalid commands */
                     }
                 }
-                catch(JSONException e)
+                catch (JSONException e)
                 {
                     /* TODO: Set error message and status code */
                     status = -2;
                     message = e.msg;
                 }
-                catch(FileException e)
+                catch (FileException e)
                 {
                     /* Status=-1 :: I/O error */
                     status = -1;
                     message = e.msg;
                 }
-                catch(ErrnoException e)
+                catch (ErrnoException e)
                 {
                     /* Status=-1 :: I/O error */
                     status = -1;
                     message = e.msg;
                 }
-                catch(ButterflyException e)
+                catch (ButterflyException e)
                 {
                     /* Set the status */
                     status = e.status;
@@ -410,12 +424,12 @@ public final class ButterflyClient : Thread
                 responseBlock["status"] = statusBlock;
 
                 /* Write the response block to the client */
-                gprintln("Writing back response: "~responseBlock.toPrettyString());
-                bool sendStatus = sendMessage(clientSocket, cast(byte[])toJSON(responseBlock));
+                gprintln("Writing back response: " ~ responseBlock.toPrettyString());
+                bool sendStatus = sendMessage(clientSocket, cast(byte[]) toJSON(responseBlock));
                 gprintln(sendStatus);
 
                 /* If there was an error writing the response back */
-                if(!sendStatus)
+                if (!sendStatus)
                 {
                     /* End the session */
                     gprintln("Response write back failed");
@@ -437,21 +451,20 @@ public final class ButterflyClient : Thread
         clientSocket.close();
     }
 
-
-	/**
+    /**
 	 * Moves message from one folder, `srcFolder`, to another folder,
 	 * `dstFolder`.
 	 */
-	private Mail moveMail(Folder srcFolder, Mail ogMessage, Folder dstFolder)
-	{
-		/* Store a copy of the message in the destination folder `dstFolder` */
-		Mail newMessage = storeMail(dstFolder, ogMessage.getMessage());
-		
-		/* Delete the original message */
-		ogMessage.deleteMessage();
-		
-		return newMessage;
-	}
+    private Mail moveMail(Folder srcFolder, Mail ogMessage, Folder dstFolder)
+    {
+        /* Store a copy of the message in the destination folder `dstFolder` */
+        Mail newMessage = storeMail(dstFolder, ogMessage.getMessage());
+
+        /* Delete the original message */
+        ogMessage.deleteMessage();
+
+        return newMessage;
+    }
 
     /**
     * Stores a mail message in the users Mailbox
@@ -464,23 +477,23 @@ public final class ButterflyClient : Thread
 
         return savedMail;
     }
-    
+
     /**
      * Updates the given mail message in the
      * provided folder with a new message.
      */
     private Mail editMail(Mail messageOriginal, Folder storeFolder, JSONValue mailBlock)
     {
-		Mail updatedMail;
-		
-		/* Delete the old message */
-		messageOriginal.deleteMessage();
-		
-		/* Store the new message in the same folder */
-		updatedMail = Mail.createMail(mailbox, storeFolder, mailBlock);
-		
-		return updatedMail;
-	}
+        Mail updatedMail;
+
+        /* Delete the old message */
+        messageOriginal.deleteMessage();
+
+        /* Store the new message in the same folder */
+        updatedMail = Mail.createMail(mailbox, storeFolder, mailBlock);
+
+        return updatedMail;
+    }
 
     private bool authenticate(string username, string password)
     {
@@ -495,7 +508,7 @@ public final class ButterflyClient : Thread
         * Check if the account already exists.
         * If it does then throw an exception.
         */
-        if(exists("accounts/"~username))
+        if (exists("accounts/" ~ username))
         {
             /* Status=1 :: Account exists */
             throw new ButterflyException(1);
@@ -523,16 +536,17 @@ public final class ButterflyClient : Thread
         Folder newFolder;
 
         /* If it is a base folder wanting to be created */
-        if(seperatedPaths.length)
+        if (seperatedPaths.length)
         {
             newFolder = mailbox.addBaseFolder(folderName);
         }
         /* If it is a nested folder wanting to be created */
         else
         {
-            string folderPathExisting = folderName[0..lastIndexOf(folderName, "/")];
+            string folderPathExisting = folderName[0 .. lastIndexOf(folderName, "/")];
             Folder endDirectoryExisting = new Folder(mailbox, folderPathExisting);
-            newFolder = endDirectoryExisting.createFolder(folderName[lastIndexOf(folderName, "/")+1..folderName.length]);
+            newFolder = endDirectoryExisting.createFolder(folderName[lastIndexOf(folderName,
+                        "/") + 1 .. folderName.length]);
         }
 
         return newFolder;
@@ -566,20 +580,20 @@ public final class ButterflyClient : Thread
         bool reject = filterMailIncoming(&mailBlock);
 
         /* Check to see if we must reject this mail */
-        if(reject)
+        if (reject)
         {
             /* TODO: Implement me */
         }
 
         /* Get a list of the recipients of the mail message */
         string[] recipients;
-        foreach(JSONValue recipient; mailBlock["recipients"].array())
+        foreach (JSONValue recipient; mailBlock["recipients"].array())
         {
             recipients ~= recipient.str();
         }
 
         /* Store the mail to each of the recipients */
-        foreach(string recipient; recipients)
+        foreach (string recipient; recipients)
         {
             /* Get the mail address */
             string[] mailAddress = split(recipient, "@");
@@ -594,9 +608,9 @@ public final class ButterflyClient : Thread
             * Check if the domain of this recipient is this server
             * or if it is a remote server.
             */
-            if(cmp(domain, listener.getDomain()) == 0)
+            if (cmp(domain, listener.getDomain()) == 0)
             {
-                gprintln("Storing mail message to "~recipient~" ...");
+                gprintln("Storing mail message to " ~ recipient ~ " ...");
 
                 /* Get the Mailbox of a given user */
                 Mailbox userMailbox = new Mailbox(username);
@@ -622,7 +636,7 @@ public final class ButterflyClient : Thread
     private bool filterMailOutgoing(JSONValue* mailBlock)
     {
         /* Add the from field to the mail block */
-        (*mailBlock)["from"] = mailbox.username~"@"~listener.getDomain();
+        (*mailBlock)["from"] = mailbox.username ~ "@" ~ listener.getDomain();
 
         /* Add the sent time stamp */
         (*mailBlock)["sentTimestamp"] = Clock.currTime().toString();
@@ -638,24 +652,23 @@ public final class ButterflyClient : Thread
     * Sends the mail message `mail` to the servers
     * listed in the recipients field.
     */
-    public void sendMail(JSONValue mailBlock)
+    public void sendMail(JSONValue mailBlock, bool placeInSentBox = true)
     {
         /* Filter the mail */
         bool reject = filterMailOutgoing(&mailBlock);
 
         /* Check to see if we must reject this mail */
-        if(reject)
+        if (reject)
         {
             /* TODO: Implement me */
         }
 
         /* Get a list of the recipients of the mail message */
         string[] recipients;
-        foreach(JSONValue recipient; mailBlock["recipients"].array())
+        foreach (JSONValue recipient; mailBlock["recipients"].array())
         {
             recipients ~= recipient.str();
         }
-
 
         /* List of server's failed to deliver to */
         string[] failedRecipients;
@@ -664,9 +677,9 @@ public final class ButterflyClient : Thread
         string[] remoteRecipients;
 
         /* Send the mail to each of the recipients */
-        foreach(string recipient; recipients)
+        foreach (string recipient; recipients)
         {
-            gprintln("Sending mail message to "~recipient~" ...");
+            gprintln("Sending mail message to " ~ recipient ~ " ...");
 
             /* Get the mail address */
             string[] mailAddress = split(recipient, "@");
@@ -681,12 +694,12 @@ public final class ButterflyClient : Thread
             * Check if the domain of this recipient is this server
             * or if it is a remote server.
             */
-            if(listener.getServer().isLocalDomain(domain))
+            if (listener.getServer().isLocalDomain(domain))
             {
                 gprintln("Local delivery occurring...");
 
                 /* TODO: Add failed delivery here too */
-                if(!Mailbox.isMailbox(username))
+                if (!Mailbox.isMailbox(username))
                 {
                     /* Append failed recipient to array of failed recipients */
                     failedRecipients ~= recipient;
@@ -703,7 +716,7 @@ public final class ButterflyClient : Thread
                 reject = filterMailIncoming(&mailBlock);
 
                 /* Check to see if we must reject this mail */
-                if(reject)
+                if (reject)
                 {
                     /* TODO: Implement me */
                 }
@@ -718,25 +731,27 @@ public final class ButterflyClient : Thread
             }
         }
 
-
         import client.sender : MailSender;
 
         /**
         * Create a new MailSender for delivering remote mail
         * off of this thread
         */
-        MailSender remoteMailSender = new MailSender(remoteRecipients, mailBlock, failedRecipients, this);
-
+        MailSender remoteMailSender = new MailSender(remoteRecipients,
+                mailBlock, failedRecipients, this);
 
         gprintln("Mail delivered (there may be remote mail delivery ongoing)");
 
-
         /* Store the message in this user's "Sent" folder */
-        Folder sentFolder = new Folder(mailbox, "Sent");
+        if (placeInSentBox)
+        {
+            Folder sentFolder = new Folder(mailbox, "Sent");
 
-        /* Store the message in their Inbox folder */
-        Mail.createMail(mailbox, sentFolder, mailBlock);
+            /* Store the message in their Sent folder */
+            Mail.createMail(mailbox, sentFolder, mailBlock);
 
-        gprintln("Saved mail message to sent folder");
+            gprintln("Saved mail message to sent folder");
+        }
+
     }
 }
