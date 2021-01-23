@@ -45,6 +45,8 @@ public final class MailSender : Thread
         /* Save the failed local recipients */
         this.failedRecipients = failedRecipients;
 
+        this.client = client;
+
         /* Start the delivery */
         start();
     }
