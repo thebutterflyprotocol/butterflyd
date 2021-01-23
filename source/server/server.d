@@ -6,6 +6,7 @@ import std.file : mkdir, exists, isDir;
 import server.listener : ButterflyListener;
 import std.stdio : writeln;
 import std.string : cmp;
+import gogga;
 
 public final class ButterflyServer
 {
@@ -94,10 +95,10 @@ public final class ButterflyServer
         /* Start the listeners */
         foreach(ButterflyListener listener; listeners)
         {
-            writeln("Starting listener \"" ~ listener.getName() ~"\" ...");
-            writeln("Listener is using configuration: "~listener.getConfig().toPrettyString());
+            gprintln("Starting listener \"" ~ listener.getName() ~"\" ...");
+            gprintln("Listener is using configuration: "~listener.getConfig().toPrettyString());
             listener.start();
-            writeln("Listener \"" ~ listener.getName() ~ "\" started");
+            gprintln("Listener \"" ~ listener.getName() ~ "\" started");
         }
     }
 
