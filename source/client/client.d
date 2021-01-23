@@ -752,6 +752,5 @@ public final class ButterflyClient : Thread
 
             gprintln("Saved mail message to sent folder");
         }
-
     }
 }

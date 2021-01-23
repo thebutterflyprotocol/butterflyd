@@ -170,8 +170,8 @@ public final class MailSender : Thread
 
         gprintln(deliveryReport);
 
-        /* Deliver the error message */
-        client.sendMail(deliveryReport);
+        /* Deliver the error message (and don't put the report in the sent box) */
+        client.sendMail(deliveryReport, false);
 
         gprintln("Mail delivery report sent: " ~ deliveryReport.toPrettyString());
 
