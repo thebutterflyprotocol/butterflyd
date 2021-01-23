@@ -122,6 +122,6 @@ public final class MailSender : Thread
             }
         }
 
-        gprintln("Sent mail message to " ~ remoteRecipient);
+        gprintln("Sent mail message to " ~ remoteRecipients);
     }
 }

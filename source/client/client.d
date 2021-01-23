@@ -688,7 +688,9 @@ public final class ButterflyClient : Thread
                 /* TODO: Add failed delivery here too */
                 if(!Mailbox.isMailbox(username))
                 {
-                    goto deliveryFailed;
+                    /* Append failed recipient to array of failed recipients */
+                    failedRecipients ~= recipient;
+                    continue;
                 }
 
                 /* Get the Mailbox of a given user */
