@@ -7,6 +7,7 @@ import std.socket;
 import gogga;
 import std.string;
 import std.conv : to;
+import client.client;
 
 /**
 * The MailSender class is used to instantiate an object
@@ -26,11 +27,13 @@ public final class MailSender : Thread
     /* Failed recipients (at the beginning it will be only local) */
     private string[] failedRecipients;
 
+    private ButterflyClient client;
+
     /**
     * Constructs a new MailSender with the given
     * email to be delivered (remotely)
     */
-    this(string[] remoteRecipients, JSONValue mailBlock, string[] failedRecipients)
+    this(string[] remoteRecipients, JSONValue mailBlock, string[] failedRecipients, ButterflyClient client)
     {
         /* Set the worker function */
         super(&run);
@@ -144,15 +147,20 @@ public final class MailSender : Thread
     */
     private void mailReport()
     {
-
         /* Create the error message */
         JSONValue deliveryReport;
         JSONValue[] errorRecipients = [
-            JSONValue(mailbox.username ~ "@" ~ listener.getDomain())
+            JSONValue(client.mailbox.username ~ "@" ~ client.listener.getDomain())
         ];
         deliveryReport["recipients"] = errorRecipients;
 
         /* TODO: Make more indepth, and have copy of the mail that was tried to be sent */
+        /* Get a list of the recipients of the mail message */
+        string[] recipients;
+        foreach(JSONValue recipient; mailBlock["recipients"].array())
+        {
+            recipients ~= recipient.str();
+        }
         string errorMessage = "There was an error delivery the mail to: " ~ to!(
                 string)(recipients) ~ "\n";
         errorMessage ~= "\nThe message was:\n\n" ~ mailBlock.toPrettyString();
@@ -161,7 +169,7 @@ public final class MailSender : Thread
         gprintln(deliveryReport);
 
         /* Deliver the error message */
-        sendMail(deliveryReport);
+        client.sendMail(deliveryReport);
 
         gprintln("Mail delivery report sent: " ~ deliveryReport.toPrettyString());
 

@@ -21,7 +21,7 @@ public final class ButterflyClient : Thread
     /**
     * The associated listener
     */
-    private ButterflyListener listener;
+    public ButterflyListener listener;
 
     /**
     * Socket of the client connection
@@ -48,7 +48,7 @@ public final class ButterflyClient : Thread
     * The Mailbox (if client) of the connected
     * user.
     */
-    private Mailbox mailbox;
+    public Mailbox mailbox;
 
     this(ButterflyListener listener, Socket clientSocket)
     {
@@ -638,7 +638,7 @@ public final class ButterflyClient : Thread
     * Sends the mail message `mail` to the servers
     * listed in the recipients field.
     */
-    private void sendMail(JSONValue mailBlock)
+    public void sendMail(JSONValue mailBlock)
     {
         /* Filter the mail */
         bool reject = filterMailOutgoing(&mailBlock);
@@ -725,7 +725,7 @@ public final class ButterflyClient : Thread
         * Create a new MailSender for delivering remote mail
         * off of this thread
         */
-        MailSender remoteMailSender = new MailSender(remoteRecipients, mailBlock, failedRecipients);
+        MailSender remoteMailSender = new MailSender(remoteRecipients, mailBlock, failedRecipients, this);
 
 
         gprintln("Mail delivered (there may be remote mail delivery ongoing)");
