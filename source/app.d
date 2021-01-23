@@ -8,10 +8,11 @@ import std.conv : to;
 import server.listener : ButterflyListener;
 import server.listeners;
 import std.string : cmp;
+import gogga;
 
 void main()
 {
-	writeln("Starting butterflyd...");
+	gprintln("Starting butterflyd...");
 
 	JSONValue config;
 
@@ -46,7 +47,7 @@ private ButterflyListener[] constructListeners(JSONValue listenersBlock)
 
 	foreach(string listener; enabledListeners)
 	{
-		writeln("Constructing listener \"" ~ listener ~ "\" ...");
+		gprintln("Constructing listener \"" ~ listener ~ "\" ...");
 
 		if(cmp(listenersBlock[listener]["type"].str(), "ipv4") == 0)
 		{
@@ -57,7 +58,7 @@ private ButterflyListener[] constructListeners(JSONValue listenersBlock)
 			listeners ~= new IPv6Listener(listener, listenersBlock[listener]);
 		}
 
-		writeln("Listener \"" ~ listener ~ "\" constructed");
+		gprintln("Listener \"" ~ listener ~ "\" constructed");
 	}
 
 	return listeners;
