@@ -4,6 +4,7 @@ import std.json;
 import std.file;
 import std.stdio;
 import std.string;
+import gogga;
 
 /**
 * Mailbox
@@ -168,7 +169,7 @@ public final class Folder
             }
         }
 
-        writeln("fhjdf");
+        gprintln("fhjdf");
         return messages;
     }
 
