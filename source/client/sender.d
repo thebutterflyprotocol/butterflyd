@@ -1,7 +1,7 @@
 module client.sender;
 
 import core.thread;
-import std.json : JSONValue, JSONException, parseJSON;
+import std.json : JSONValue, JSONException, parseJSON, toJSON;
 import bmessage;
 import std.socket;
 import gogga;
@@ -22,11 +22,14 @@ public final class MailSender : Thread
     private string[] remoteRecipients;
     private JSONValue mailBlock;
 
+    /* Failed recipients (at the beginning it will be only local) */
+    private string[] failedRecipients;
+
     /**
     * Constructs a new MailSender with the given
     * email to be delivered (remotely)
     */
-    this(string[] remoteRecipients, JSONValue mailBlock)
+    this(string[] remoteRecipients, JSONValue mailBlock, string[] failedRecipients)
     {
         /* Set the worker function */
         super(&run);
@@ -34,6 +37,9 @@ public final class MailSender : Thread
         /* Save delivery information */
         this.remoteRecipients = remoteRecipients;
         this.mailBlock = mailBlock;
+
+        /* Save the failed local recipients */
+        this.failedRecipients = failedRecipients;
 
         /* Start the delivery */
         start();
@@ -92,7 +98,7 @@ public final class MailSender : Thread
                 /* TODO: Get ["status"]["code"] code here an act on it */
                 if (responseBlock["status"]["code"].integer() == 0)
                 {
-                    gprintln("Message delivered to user " ~ recipient);
+                    gprintln("Message delivered to user " ~ remoteRecipient);
                 }
                 else
                 {
@@ -107,15 +113,15 @@ public final class MailSender : Thread
             {
                 /* When delivery fails */
             deliveryFailed:
-                gprintln("Error delivering to " ~ recipient);
+                gprintln("Error delivering to " ~ remoteRecipient);
 
                 /* Append failed recipient to array of failed recipients */
-                failedRecipients ~= recipient;
+                failedRecipients ~= remoteRecipient;
 
                 continue;
             }
         }
 
-        gprintln("Sent mail message to " ~ recipient);
+        gprintln("Sent mail message to " ~ remoteRecipient);
     }
 }

@@ -660,6 +660,9 @@ public final class ButterflyClient : Thread
         /* List of server's failed to deliver to */
         string[] failedRecipients;
 
+        /* List of remote recipients */
+        string[] remoteRecipients;
+
         /* Send the mail to each of the recipients */
         foreach(string recipient; recipients)
         {
@@ -709,42 +712,21 @@ public final class ButterflyClient : Thread
             else
             {
                 /* Tally up all non-local recipients for off-thread delivery */
-
+                remoteRecipients ~= recipient;
             }
         }
 
-        gprintln("Mail delivered");
+
+        import client.sender : MailSender;
 
         /**
-        * If there are failed sends then send an error message
-        * to the sender.
-        *
-        * TODO: I would like this to account for both local AND remote
-        * delivery failures but for now, with the new threaded remote mail
-        * delivery system, this only accounts for mail
-        *
-        * 1. Possible fix, provide the failed list to the MailSender object
-        * on construction and do tallying there @deavmi
+        * Create a new MailSender for delivering remote mail
+        * off of this thread
         */
-        if(failedRecipients.length)
-        {
-            /* Create the error message */
-            JSONValue deliveryReport;
-            JSONValue[] errorRecipients = [JSONValue(mailbox.username~"@"~listener.getDomain())];
-            deliveryReport["recipients"] = errorRecipients;
+        MailSender remoteMailSender = new MailSender(remoteRecipients, mailBlock, failedRecipients);
 
-            /* TODO: Make more indepth, and have copy of the mail that was tried to be sent */
-            string errorMessage = "There was an error delivery the mail to: "~to!(string)(recipients)~"\n";
-            errorMessage ~= "\nThe message was:\n\n"~mailBlock.toPrettyString();
-            deliveryReport["message"] = errorMessage;
 
-            gprintln(deliveryReport);
-
-            /* Deliver the error message */
-            sendMail(deliveryReport);
-
-            gprintln("Mail delivery report sent: "~deliveryReport.toPrettyString());
-        }
+        gprintln("Mail delivered (there may be remote mail delivery ongoing)");
 
 
         /* Store the message in this user's "Sent" folder */
