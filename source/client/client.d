@@ -708,78 +708,9 @@ public final class ButterflyClient : Thread
             }
             else
             {
-                /* TODO: Do remote mail delivery */
-                gprintln("Remote delivery occurring...");
+                /* Tally up all non-local recipients for off-thread delivery */
 
-                try
-                {
-                    /**
-                    * Construct the server message to send to the
-                    * remote server.
-                    */
-                    JSONValue messageBlock;
-                    messageBlock["command"] = "deliverMail";
-
-                    JSONValue requestBlock;
-                    requestBlock["mail"] = mailBlock;
-                    messageBlock["request"] = requestBlock;
-
-                    /* Deliver the mail to the remote server */
-                    Socket remoteServer = new Socket(AddressFamily.INET, SocketType.STREAM, ProtocolType.TCP);
-                    
-                    /* TODO: Add check over here to make sure these are met */
-                    string remoteHost = split(domain, ":")[0];
-                    ushort remotePort = to!(ushort)(split(domain, ":")[1]);
-
-                    remoteServer.connect(parseAddress(remoteHost, remotePort));
-                    bool sendStatus = sendMessage(remoteServer, cast(byte[])toJSON(messageBlock));
-
-                    if(!sendStatus)
-                    {
-                        goto deliveryFailed;
-                    }
-
-                    byte[] receivedBytes;
-                    bool recvStatus = receiveMessage(remoteServer, receivedBytes);
-
-                    if(!recvStatus)
-                    {
-                        goto deliveryFailed;
-                    }
-
-                    /* Close the connection with the remote host */
-                    remoteServer.close();
-
-                    JSONValue responseBlock = parseJSON(cast(string)receivedBytes);
-
-                    /* TODO: Get ["status"]["code"] code here an act on it */
-                    if(responseBlock["status"]["code"].integer() == 0)
-                    {
-                        gprintln("Message delivered to user "~recipient);
-                    }
-                    else
-                    {
-                        goto deliveryFailed;
-                    }                    
-                }
-                catch(SocketOSException)
-                {
-                    goto deliveryFailed;
-                }     
-                catch(JSONException)
-                {
-                    /* When delivery fails */
-                    deliveryFailed:
-                        gprintln("Error delivering to "~recipient);
-
-                        /* Append failed recipient to array of failed recipients */
-                        failedRecipients ~= recipient;
-
-                        continue;
-                }
             }
-
-            gprintln("Sent mail message to "~recipient);
         }
 
         gprintln("Mail delivered");
@@ -787,6 +718,13 @@ public final class ButterflyClient : Thread
         /**
         * If there are failed sends then send an error message
         * to the sender.
+        *
+        * TODO: I would like this to account for both local AND remote
+        * delivery failures but for now, with the new threaded remote mail
+        * delivery system, this only accounts for mail
+        *
+        * 1. Possible fix, provide the failed list to the MailSender object
+        * on construction and do tallying there @deavmi
         */
         if(failedRecipients.length)
         {
