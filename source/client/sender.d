@@ -46,7 +46,10 @@ public final class MailSender : Thread
         start();
     }
 
-    private void run()
+    /**
+    * Does the remote mail delivery
+    */
+    private void remoteDeliver()
     {
         /* Deliver mail to each recipient */
         foreach (string remoteRecipient; remoteRecipients)
@@ -133,5 +136,47 @@ public final class MailSender : Thread
         }
 
         gprintln("Sent mail message to " ~ remoteRecipients);
+    }
+
+    /**
+    * Sends a mail message to the sender's INbox specifying that there
+    * was a mail delivery failure to one or more of the provided addresses
+    */
+    private void mailReport()
+    {
+
+        /* Create the error message */
+        JSONValue deliveryReport;
+        JSONValue[] errorRecipients = [
+            JSONValue(mailbox.username ~ "@" ~ listener.getDomain())
+        ];
+        deliveryReport["recipients"] = errorRecipients;
+
+        /* TODO: Make more indepth, and have copy of the mail that was tried to be sent */
+        string errorMessage = "There was an error delivery the mail to: " ~ to!(
+                string)(recipients) ~ "\n";
+        errorMessage ~= "\nThe message was:\n\n" ~ mailBlock.toPrettyString();
+        deliveryReport["message"] = errorMessage;
+
+        gprintln(deliveryReport);
+
+        /* Deliver the error message */
+        sendMail(deliveryReport);
+
+        gprintln("Mail delivery report sent: " ~ deliveryReport.toPrettyString());
+
+    }
+
+    private void run()
+    {
+        /* Do the remote mail delivery */
+        remoteDeliver();
+
+        /* If there were failed recipients send a report to the sender */
+        if (failedRecipients.length)
+        {
+            /* Send the mail report */
+            mailReport();
+        }
     }
 }
