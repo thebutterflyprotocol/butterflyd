@@ -5,6 +5,7 @@
 	"copyright": "Copyright © 2020, Tristan B. Kildaire",
 	"dependencies": {
 		"bformat": "3.1.0",
+		"gogga": "~>0.0.2",
 		"tristanable": "2.2.0"
 	},
 	"description": "Butterfly mail daemon",
