@@ -6,6 +6,7 @@ import bmessage;
 import std.socket;
 import gogga;
 import std.string;
+import std.conv : to;
 
 /**
 * The MailSender class is used to instantiate an object
@@ -52,6 +53,15 @@ public final class MailSender : Thread
         {
             /* TODO: Do remote mail delivery */
             gprintln("Remote delivery occurring...");
+
+            /* Get the mail address */
+            string[] mailAddress = split(remoteRecipient, "@");
+
+            /* Get the username */
+            string username = mailAddress[0];
+
+            /* Get the domain */
+            string domain = mailAddress[1];
 
             try
             {
